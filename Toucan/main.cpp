@@ -23,11 +23,12 @@ int main(int argc, char *argv[]) {
 	Initialize();
 
 	char tempServer[512];
+	std::string connectString = "connect";
 	while (!connected) {
 		std::cin >> tempServer;
 		SetServerIP(tempServer);
 
-		if (std::strcmp(SendMessage("connect"), "connect")) {
+		if (SendMessage("connect").compare("connect") == 0) {
 			connected = true;
 		}
 	}

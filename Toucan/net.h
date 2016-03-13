@@ -12,7 +12,7 @@ static struct sockaddr_in server;
 static int s, slen = sizeof(server);
 static char buf[BUFLEN];
 
-char * SendMessage(char message[]);
+std::string SendMessage(char message[]);
 void Initialize();
 void CleanUp();
 void SetServerIP(char IP[]);

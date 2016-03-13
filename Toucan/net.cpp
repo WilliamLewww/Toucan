@@ -14,11 +14,11 @@ void CleanUp() {
 	WSACleanup();
 }
 
-char * SendMessage(char message[]) {
+std::string SendMessage(char message[]) {
 	sendto(s, message, strlen(message), 0, (struct sockaddr *) &server, slen);
 	memset(buf, '\0', BUFLEN);
 	recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &server, &slen);
-	return buf;
+	return std::string(buf);
 }
 
 void SetServerIP(char IP[]) {
