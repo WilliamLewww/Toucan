@@ -6,8 +6,8 @@
 #define BUFLEN 512
 #define PORT 27861
 
-int main()
-{
+bool isRunning = 1;
+int main() {
 	SOCKET s;
 	struct sockaddr_in server, si_other;
 	int slen, recv_len;
@@ -25,8 +25,7 @@ int main()
 
 	bind(s, (struct sockaddr *)&server, sizeof(server));
 
-	while (1)
-	{
+	while (isRunning) {
 		printf("Waiting for data...\n");
 
 		memset(buf, '\0', BUFLEN);

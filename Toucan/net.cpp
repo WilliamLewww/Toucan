@@ -7,7 +7,6 @@ void Initialize() {
 	memset((char *)&server, 0, sizeof(server));
 	server.sin_family = AF_INET;
 	server.sin_port = htons(PORT);
-	server.sin_addr.S_un.S_addr = inet_addr(SERVER);
 }
 
 void CleanUp() {
@@ -20,4 +19,8 @@ char * SendMessage(char message[]) {
 	memset(buf, '\0', BUFLEN);
 	recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &server, &slen);
 	return buf;
+}
+
+void SetServerIP(char IP[]) {
+	server.sin_addr.S_un.S_addr = inet_addr(IP);
 }

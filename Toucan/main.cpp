@@ -2,12 +2,16 @@
 #include <SDL_opengl.h>
 #include "main.h"
 #include "net.h"
+#include "joiner.h"
+#include <iostream>
 
 void Update(int gameTime);
 void Render(SDL_Window* window, SDL_GLContext context);
 
 SDL_Event event;
 SDL_GLContext context;
+
+Joiner joiner;
 
 bool isRunning = true;
 int frameStart, frameEnd, deltaTime = 0;
@@ -17,6 +21,18 @@ int main(int argc, char *argv[]) {
 	glOrtho(-SCREENWIDTH / 2, SCREENWIDTH / 2, SCREENHEIGHT / 2, -SCREENHEIGHT / 2, 0, 1);
 
 	Initialize();
+
+	char tempServer[512];
+	while (!connected) {
+		std::cin >> tempServer;
+		SetServerIP(tempServer);
+
+		if (std::strcmp(SendMessage("connect"), "connect")) {
+			connected = true;
+		}
+	}
+
+	joiner.LoadContent();
 
 	while (isRunning) {
 		while (SDL_PollEvent(&event)) {
@@ -42,13 +58,15 @@ int main(int argc, char *argv[]) {
 }
 
 void Update(int gameTime) {
-
+	joiner.Update(gameTime);
 }
 
 void Render(SDL_Window* window, SDL_GLContext context) {
 	SDL_GL_MakeCurrent(window, context);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
+
+	joiner.Render();
 
 	SDL_GL_SwapWindow(window);
 }
