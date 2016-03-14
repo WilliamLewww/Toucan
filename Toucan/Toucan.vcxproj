@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="joiner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net.cpp" />
@@ -125,6 +126,7 @@
     <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="input.h" />
     <ClInclude Include="joiner.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="net.h" />

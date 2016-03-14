@@ -3,6 +3,7 @@
 #include "main.h"
 #include "net.h"
 #include "joiner.h"
+#include "input.h"
 #include <iostream>
 
 void Update(int gameTime);
@@ -40,6 +41,8 @@ int main(int argc, char *argv[]) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT)
 				isRunning = false;
+
+			Input::GetKeys(event);
 		}
 
 		if (deltaTime < 1) {

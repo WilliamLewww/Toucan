@@ -25,12 +25,12 @@ std::string ReceiveMessage() {
 	memset(buf, '\0', BUFLEN);
 	std::thread tryReceive(ReceiveTimeout);
 
-	std::clock_t start;
+	std::clock_t initial;
 	double duration = 0;
-	start = std::clock();
+	initial = std::clock();
 
 	while (duration < 5 && messageReceived == false) {
-		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+		duration = (std::clock() - initial) / (double)CLOCKS_PER_SEC;
 	}
 
 	tryReceive.detach();
