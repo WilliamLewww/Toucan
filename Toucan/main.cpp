@@ -16,10 +16,6 @@ Joiner joiner;
 bool isRunning = true;
 int frameStart, frameEnd, deltaTime = 0;
 int main(int argc, char *argv[]) {
-	displayWindow = SDL_CreateWindow("Mallard", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
-	context = SDL_GL_CreateContext(displayWindow);
-	glOrtho(-SCREENWIDTH / 2, SCREENWIDTH / 2, SCREENHEIGHT / 2, -SCREENHEIGHT / 2, 0, 1);
-
 	Initialize();
 
 	char tempServer[512];
@@ -28,10 +24,15 @@ int main(int argc, char *argv[]) {
 		std::cin >> tempServer;
 		SetServerIP(tempServer);
 
-		if (SendMessage("connect").compare("connect") == 0) {
+		SendMessage("connect");
+		if (ReceiveMessage().compare("connect") == 0) {
 			connected = true;
 		}
 	}
+
+	displayWindow = SDL_CreateWindow("Toucan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
+	context = SDL_GL_CreateContext(displayWindow);
+	glOrtho(-SCREENWIDTH / 2, SCREENWIDTH / 2, SCREENHEIGHT / 2, -SCREENHEIGHT / 2, 0, 1);
 
 	joiner.LoadContent();
 
