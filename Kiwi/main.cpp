@@ -1,5 +1,6 @@
 #include <winsock2.h>
 #include <iostream>
+#include "client.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -9,12 +10,11 @@
 bool isRunning = 1;
 int main() {
 	SOCKET s;
-	struct sockaddr_in server, si_other;
+	struct sockaddr_in server;
+	struct Client client;
 	int slen, recv_len;
 	char buf[BUFLEN];
 	WSADATA wsa;
-
-	slen = sizeof(si_other);
 
 	WSAStartup(MAKEWORD(2, 2), &wsa);
 	s = socket(AF_INET, SOCK_DGRAM, 0);
@@ -29,12 +29,12 @@ int main() {
 		printf("Waiting for data...\n");
 
 		memset(buf, '\0', BUFLEN);
-		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &client.address, &client.addrLength);
 
-		printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
+		printf("Received packet from %s:%d\n", inet_ntoa(client.address.sin_addr), ntohs(client.address.sin_port));
 		printf("Data: %s\n", buf);
 
-		sendto(s, buf, recv_len, 0, (struct sockaddr*) &si_other, slen);
+		sendto(s, buf, recv_len, 0, (struct sockaddr*) &client.address, client.addrLength);
 	}
 
 	closesocket(s);
