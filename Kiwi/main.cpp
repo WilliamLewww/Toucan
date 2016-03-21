@@ -1,21 +1,29 @@
 #include <winsock2.h>
 #include <iostream>
+#include <vector>
 #include "client.h"
+#include "command.h"
+#include "connection.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
 #define BUFLEN 512
 #define PORT 27861
 
+void SendMessage(char message[], Client client);
+
+SOCKET s;
+WSADATA wsa;
+
+std::vector<Client> clientList;
+Client tempClient;
+
+struct sockaddr_in server;
+int slen, recv_len;
+char buf[BUFLEN];
+
 bool isRunning = 1;
 int main() {
-	SOCKET s;
-	struct sockaddr_in server;
-	struct Client client;
-	int slen, recv_len;
-	char buf[BUFLEN];
-	WSADATA wsa;
-
 	WSAStartup(MAKEWORD(2, 2), &wsa);
 	s = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -29,16 +37,19 @@ int main() {
 		printf("Waiting for data...\n");
 
 		memset(buf, '\0', BUFLEN);
-		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &client.address, &client.addrLength);
-
-		printf("Received packet from %s:%d\n", inet_ntoa(client.address.sin_addr), ntohs(client.address.sin_port));
-		printf("Data: %s\n", buf);
-
-		sendto(s, buf, recv_len, 0, (struct sockaddr*) &client.address, client.addrLength);
+		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
+		if (ProcessCommand(buf) == 0) {
+			AddConnection(tempClient, clientList);
+			SendMessage("connect", tempClient);
+		}
 	}
 
 	closesocket(s);
 	WSACleanup();
 
 	return 0;
+}
+
+void SendMessage(char message[], Client client) {
+	sendto(s, message, strlen(message), 0, (struct sockaddr *) &client.address, client.addrLength);
 }

@@ -26,9 +26,6 @@ int main(int argc, char *argv[]) {
 		SetServerIP(tempServer);
 
 		SendMessage("connect");
-		while (true) {
-			std::cout << ReceiveMessage().c_str();
-		}
 		if (ReceiveMessage().compare("connect") == 0) {
 			connected = true;
 		}
