@@ -1,9 +1,7 @@
 #include <winsock2.h>
 #include <iostream>
 #include <vector>
-#include "client.h"
-#include "command.h"
-#include "connection.h"
+#include "main.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -52,4 +50,8 @@ int main() {
 
 void SendMessage(char message[], Client client) {
 	sendto(s, message, strlen(message), 0, (struct sockaddr *) &client.address, client.addrLength);
+}
+
+void ReceiveMessage(char message[], Client client) {
+	recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &client.address, &client.addrLength);
 }

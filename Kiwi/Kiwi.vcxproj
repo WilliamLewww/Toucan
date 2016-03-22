@@ -126,6 +126,7 @@
     <ClInclude Include="client.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="connection.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
