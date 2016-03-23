@@ -4,4 +4,5 @@
 struct Client {
 	sockaddr_in address;
 	int addrLength = sizeof(address);
+	bool connected;
 };

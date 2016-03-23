@@ -13,3 +13,8 @@ static int curConnections;
 
 bool AddConnection(Client client, std::vector<Client> clientList);
 void CheckConnection();
+
+//TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
+//TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
+//TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
+bool PingClient(Client client);
