@@ -4,5 +4,4 @@
 struct Client {
 	sockaddr_in address;
 	int addrLength = sizeof(address);
-	int ID;
 };

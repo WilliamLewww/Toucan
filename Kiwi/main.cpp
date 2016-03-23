@@ -13,9 +13,6 @@ void SendMessage(char message[], Client client);
 SOCKET s;
 WSADATA wsa;
 
-std::vector<Client> clientList;
-Client tempClient;
-
 struct sockaddr_in server;
 int slen, recv_len;
 char buf[BUFLEN];
