@@ -45,3 +45,10 @@ void ReceiveTimeout(Client client, bool* messageReceived, char buf[]) {
 	ReceiveMessage(buf, client);
 	*messageReceived = true;
 }
+
+int ProcessCommand(char buf[]) {
+	std::string command(buf);
+	if (command.compare("connect") == 0) return 0;
+
+	return -1;
+}

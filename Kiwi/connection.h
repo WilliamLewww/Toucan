@@ -13,6 +13,7 @@ static int curConnections;
 
 bool AddConnection(Client client, std::vector<Client> clientList);
 void CheckConnection();
+int ProcessCommand(char buf[]);
 
 //TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
 //TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST

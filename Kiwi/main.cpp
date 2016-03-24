@@ -34,7 +34,7 @@ int main() {
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
 		if (ProcessCommand(buf) == 0) {
-			tempClient.connected = true;
+			tempClient.status = 1;
 			AddConnection(tempClient, clientList);
 			SendMessage("connect", tempClient);
 		}
