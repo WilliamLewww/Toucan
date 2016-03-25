@@ -29,17 +29,14 @@ int main() {
 	bind(s, (struct sockaddr *)&server, sizeof(server));
 
 	while (isRunning) {
-		printf("Waiting for data...\n");
-
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
 		if (ProcessCommand(buf) == 0) {
 			tempClient.status = 1;
-			AddConnection(tempClient, clientList);
-			SendMessage("connect", tempClient);
-		}
+			if (AddConnection(tempClient, clientList)) SendMessage("connect", tempClient);
 
-		PingClient(tempClient);
+			std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
+		}
 	}
 
 	closesocket(s);

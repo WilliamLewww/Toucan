@@ -3,6 +3,10 @@
 void ReceiveTimeout(Client client, bool* messageReceived, char buf[]);
 bool PingClient(Client client);
 
+int GetConnectionCount() {
+	return curConnections;
+}
+
 bool AddConnection(Client client, std::vector<Client> clientList) {
 	CheckConnection();
 
@@ -11,7 +15,7 @@ bool AddConnection(Client client, std::vector<Client> clientList) {
 		curConnections += 1;
 		return true;
 	}
-
+	
 	return false;
 }
 
