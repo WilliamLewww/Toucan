@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "main.h"
+#include "environment.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -28,14 +29,21 @@ int main() {
 
 	bind(s, (struct sockaddr *)&server, sizeof(server));
 
+	GenerateMap();
+
 	while (isRunning) {
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
+
 		if (ProcessCommand(buf) == 0) {
 			tempClient.status = 1;
 			if (AddConnection(tempClient, clientList)) SendMessage("connect", tempClient);
 
 			std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
+		}
+
+		if (ProcessCommand(buf) == 1) {
+			SendMap(tempClient);
 		}
 	}
 

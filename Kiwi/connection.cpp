@@ -26,10 +26,10 @@ void CheckConnection() {
 bool PingClient(Client client) {
 	SendMessage("ping", client);
 	bool messageReceived = false;
-	static char buf[BUFLEN];
+	static char message[BUFLEN];
 
-	memset(buf, '\0', BUFLEN);
-	std::thread tryReceive(ReceiveTimeout, client, &messageReceived, buf);
+	memset(message, '\0', BUFLEN);
+	std::thread tryReceive(ReceiveTimeout, client, &messageReceived, message);
 
 	std::clock_t initial;
 	double duration = 0;
@@ -41,7 +41,7 @@ bool PingClient(Client client) {
 
 	tryReceive.detach();
 
-	if (std::string(buf).compare("pong")) return true;
+	if (std::string(message).compare("pong")) return true;
 	else return false;
 }
 
@@ -53,6 +53,7 @@ void ReceiveTimeout(Client client, bool* messageReceived, char buf[]) {
 int ProcessCommand(char buf[]) {
 	std::string command(buf);
 	if (command.compare("connect") == 0) return 0;
+	if (command.compare("getmap") == 1) return 1;
 
 	return -1;
 }

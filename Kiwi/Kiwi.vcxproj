@@ -119,12 +119,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="connection.cpp" />
+    <ClCompile Include="environment.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client.h" />
     <ClInclude Include="connection.h" />
+    <ClInclude Include="environment.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="vector2.h" />
   </ItemGroup>
