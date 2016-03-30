@@ -1,5 +1,5 @@
 #include "player.h"
 
-void Initialize() {
+void InitializePlayer() {
 
 }

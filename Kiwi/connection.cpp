@@ -53,7 +53,7 @@ void ReceiveTimeout(Client client, bool* messageReceived, char buf[]) {
 int ProcessCommand(char buf[]) {
 	std::string command(buf);
 	if (command.compare("connect") == 0) return 0;
-	if (command.compare("getmap") == 1) return 1;
+	if (command.compare("getmap") == 0) return 1;
 
 	return -1;
 }

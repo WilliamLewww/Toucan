@@ -31,6 +31,11 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	SendMessage("getmap");
+	for (int x = 0; x < 30; x++) {
+		std::cout << ReceiveMessage().size() << std::endl;
+	}
+
 	displayWindow = SDL_CreateWindow("Toucan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
 	context = SDL_GL_CreateContext(displayWindow);
 	glOrtho(-SCREENWIDTH / 2, SCREENWIDTH / 2, SCREENHEIGHT / 2, -SCREENHEIGHT / 2, 0, 1);
