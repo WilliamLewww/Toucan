@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
 	SendMessage("getmap");
 	for (int x = 0; x < 30; x++) {
-		std::cout << ReceiveMessage().size() << std::endl;
+		std::cout << ReceiveMessage().c_str() << std::endl;
 	}
 
 	displayWindow = SDL_CreateWindow("Toucan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
