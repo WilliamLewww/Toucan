@@ -4,6 +4,7 @@
 #include "net.h"
 #include "joiner.h"
 #include "input.h"
+#include "environment.h"
 #include <iostream>
 
 void Update(int gameTime);
@@ -31,10 +32,12 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	SendMessage("getmap");
+	GetMap();
+
+	/*SendMessage("getmap");
 	for (int x = 0; x < 30; x++) {
 		std::cout << ReceiveMessage().c_str() << std::endl;
-	}
+	}*/
 
 	displayWindow = SDL_CreateWindow("Toucan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
 	context = SDL_GL_CreateContext(displayWindow);
