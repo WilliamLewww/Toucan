@@ -13,5 +13,5 @@ void Joiner::Update(int gameTime) {
 }
 
 void Joiner::Render() {
-
+	DrawMap();
 }

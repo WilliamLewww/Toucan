@@ -1,8 +1,7 @@
 #pragma once
 #include "vector2.h"
 
-struct Player
-{
+struct Player {
 	Vector2 position;
 };
 
