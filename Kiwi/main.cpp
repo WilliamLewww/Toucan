@@ -1,6 +1,8 @@
 #include <winsock2.h>
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <string>
 #include "main.h"
 #include "environment.h"
 
@@ -35,15 +37,28 @@ int main() {
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
 
-		if (ProcessCommand(buf) == 0) {
-			tempClient.status = 1;
-			if (AddConnection(tempClient, clientList)) SendMessage("connect", tempClient);
+		switch (ProcessCommand(buf)) {
+			case 0 :
+				tempClient.status = 1;
+				if (AddConnection(tempClient, clientList)) SendMessage("connect", tempClient);
 
-			std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
-		}
+				std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
+				break;
+			case 1:
+				SendMap(tempClient);
+				break;
+			case 2:
+				std::string tempPosition;
+				tempClient.player.position = Vector2(rand() % (SCREENWIDTH - 19), rand() % (SCREENHEIGHT - 19));
+				tempPosition = std::to_string((int)tempClient.player.position.x);
+				tempPosition += ":";
+				tempPosition += std::to_string((int)tempClient.player.position.y);
 
-		if (ProcessCommand(buf) == 1) {
-			SendMap(tempClient);
+				char tempPositionChar[255];
+				strcpy(tempPositionChar, tempPosition.c_str());
+
+				SendMessage(tempPositionChar, tempClient);
+				break;
 		}
 	}
 

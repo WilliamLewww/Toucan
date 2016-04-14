@@ -4,6 +4,7 @@
 #include "net.h"
 #include "joiner.h"
 #include "input.h"
+#include "player.h"
 #include "environment.h"
 #include <iostream>
 
@@ -33,6 +34,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	GetMap();
+	InitializePlayer();
 
 	displayWindow = SDL_CreateWindow("Toucan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
 	context = SDL_GL_CreateContext(displayWindow);

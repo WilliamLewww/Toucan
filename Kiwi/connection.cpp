@@ -54,6 +54,7 @@ int ProcessCommand(char buf[]) {
 	std::string command(buf);
 	if (command.compare("connect") == 0) return 0;
 	if (command.compare("getmap") == 0) return 1;
+	if (command.compare("initializeplayer") == 0) return 2;
 
 	return -1;
 }
