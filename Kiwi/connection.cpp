@@ -58,3 +58,16 @@ int ProcessCommand(char buf[]) {
 
 	return -1;
 }
+
+void InitializePlayer(Client client) {
+	std::string tempPosition;
+	client.player.position = Vector2(rand() % (SCREENWIDTH - (client.player.width - 1)), rand() % (SCREENHEIGHT - (client.player.height - 1)));
+	tempPosition = std::to_string((int)client.player.position.x);
+	tempPosition += ":";
+	tempPosition += std::to_string((int)client.player.position.y);
+
+	char tempPositionChar[255];
+	strcpy(tempPositionChar, tempPosition.c_str());
+
+	SendMessage(tempPositionChar, client);
+}

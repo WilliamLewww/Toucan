@@ -27,8 +27,8 @@ void DrawTile(int xPos, int yPos) {
 	glBegin(GL_QUADS);
 	glColor3f(255, 0, 0);
 	for (int x = 0; x < 4; x++) {
-		vectors[x].x *= 20;
-		vectors[x].y *= 20;
+		vectors[x].x *= tileWidth;
+		vectors[x].y *= tileHeight;
 		vectors[x] += Vector2(xPos, yPos);
 		vectors[x] -= Vector2(SCREENWIDTH / 2, SCREENHEIGHT / 2);
 
@@ -39,7 +39,7 @@ void DrawTile(int xPos, int yPos) {
 void DrawMap() {
 	for (int y = 0; y < MAPSIZEY; y++) {
 		for (int x = 0; x < MAPSIZEX; x++) {
-			if (tileMap[y][x] == 1) DrawTile(x * 20, y * 20);
+			if (tileMap[y][x] == 1) DrawTile(x * tileWidth, y * tileHeight);
 		}
 	}
 }

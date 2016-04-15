@@ -48,16 +48,7 @@ int main() {
 				SendMap(tempClient);
 				break;
 			case 2:
-				std::string tempPosition;
-				tempClient.player.position = Vector2(rand() % (SCREENWIDTH - 19), rand() % (SCREENHEIGHT - 19));
-				tempPosition = std::to_string((int)tempClient.player.position.x);
-				tempPosition += ":";
-				tempPosition += std::to_string((int)tempClient.player.position.y);
-
-				char tempPositionChar[255];
-				strcpy(tempPositionChar, tempPosition.c_str());
-
-				SendMessage(tempPositionChar, tempClient);
+				InitializePlayer(tempClient);
 				break;
 		}
 	}

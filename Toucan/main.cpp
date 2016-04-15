@@ -1,12 +1,4 @@
-#include <SDL.h>
-#include <SDL_opengl.h>
 #include "main.h"
-#include "net.h"
-#include "joiner.h"
-#include "input.h"
-#include "player.h"
-#include "environment.h"
-#include <iostream>
 
 void Update(int gameTime);
 void Render(SDL_Window* window, SDL_GLContext context);

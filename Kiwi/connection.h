@@ -17,3 +17,4 @@ void CheckConnection();
 int ProcessCommand(char buf[]);
 
 int GetConnectionCount();
+void InitializePlayer(Client client);

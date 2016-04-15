@@ -4,6 +4,7 @@
 
 struct Player {
 	Vector2 position;
+	int width = 20, height = 20;
 };
 
 struct Client {

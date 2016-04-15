@@ -1,5 +1,6 @@
 #pragma once
 #include "environment.h"
+#include "main.h"
 class Joiner
 {
 public:
@@ -8,4 +9,3 @@ public:
 	void Update(int gameTime);
 	void Render();
 };
-
