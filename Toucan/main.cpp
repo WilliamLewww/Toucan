@@ -20,17 +20,20 @@ int main(int argc, char *argv[]) {
 		SetServerIP(tempServer);
 
 		SendMessage("connect");
-		if (ReceiveMessage().compare("connect") == 0) {
+		if (ReceiveInitialMessage().compare("connect") == 0) {
 			connected = true;
 		}
 	}
 
 	GetMap();
 	InitializePlayer();
+	RequestPlayer();
 
 	displayWindow = SDL_CreateWindow("Toucan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_OPENGL);
 	context = SDL_GL_CreateContext(displayWindow);
 	glOrtho(-SCREENWIDTH / 2, SCREENWIDTH / 2, SCREENHEIGHT / 2, -SCREENHEIGHT / 2, 0, 1);
+
+	std::thread listener(ReceiveMessage);
 
 	joiner.LoadContent();
 
@@ -39,7 +42,7 @@ int main(int argc, char *argv[]) {
 			if (event.type == SDL_QUIT)
 				isRunning = false;
 
-			Input::GetKeys(event);
+			GetKeys(event);
 		}
 
 		if (deltaTime < 1) {
@@ -55,6 +58,7 @@ int main(int argc, char *argv[]) {
 		deltaTime = frameEnd - frameStart;
 	}
 
+	listener.detach();
 	CleanUp();
 	return 0;
 }

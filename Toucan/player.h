@@ -1,9 +1,11 @@
 #pragma once
 #include <SDL_opengl.h>
+#include <string>
 #include <stdlib.h>
 #include "vector2.h"
 #include "net.h"
 #include "main.h"
+#include "input.h"
 
 struct Player {
 	Vector2 position;
@@ -14,4 +16,6 @@ struct Player {
 extern Player localPlayer;
 
 void InitializePlayer();
+void RequestPlayer();
+void UpdateLocalPlayer(int gameTime);
 void DrawPlayer(Player player);

@@ -17,7 +17,11 @@ static char buf[BUFLEN];
 static bool messageReceived;
 
 void SendMessage(char message[]);
-std::string ReceiveMessage();
+std::string ReceiveInitialMessage();
 void Initialize();
 void CleanUp();
 void SetServerIP(char IP[]);
+
+void ReceiveMessage();
+extern std::string newestReply;
+extern std::string newestAdvert;

@@ -12,6 +12,7 @@
 #define PORT 27861
 
 void SendMessage(char message[], Client client);
+void SendMessage(char message[], std::vector<Client> clientList);
 
 SOCKET s;
 WSADATA wsa;
@@ -36,6 +37,7 @@ int main() {
 	while (isRunning) {
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
+		std::cout << buf << std::endl;
 
 		switch (ProcessCommand(buf)) {
 			case 0 :
@@ -61,6 +63,10 @@ int main() {
 
 void SendMessage(char message[], Client client) {
 	sendto(s, message, strlen(message), 0, (struct sockaddr *) &client.address, client.addrLength);
+}
+
+void SendMessage(char message[], std::vector<Client> clientList) {
+	for (auto &client : clientList) SendMessage(message, client);
 }
 
 void ReceiveMessage(char message[], Client client) {

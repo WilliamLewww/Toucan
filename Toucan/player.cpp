@@ -7,7 +7,7 @@ void InitializePlayer() {
 	bool flip = false;
 
 	SendMessage("initializeplayer");
-	tempPosition = ReceiveMessage().c_str();
+	tempPosition = ReceiveInitialMessage().c_str();
 
 	for (int x = 0; x < tempPosition.size(); x++) {
 		if (tempPosition.at(x) != ':') {
@@ -24,6 +24,23 @@ void InitializePlayer() {
 	localPlayer.valid = true;
 
 	std::cout << localPlayer.position.x << ":" << localPlayer.position.y << std::endl;
+}
+
+void RequestPlayer() {
+	SendMessage("requestplayer");
+}
+
+void UpdateLocalPlayer(int gameTime) {
+	Vector2 originalPosition = localPlayer.position;
+
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end()) localPlayer.position.x -= 1;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 1;
+
+	if (originalPosition != localPlayer.position) {
+		char positionChar[255];
+		strcpy(positionChar, (std::to_string((int)localPlayer.position.x) + ":" + std::to_string((int)localPlayer.position.y)).c_str());
+		SendMessage(positionChar);
+	}
 }
 
 void DrawPlayer(Player player) {

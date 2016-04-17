@@ -55,6 +55,7 @@ int ProcessCommand(char buf[]) {
 	if (command.compare("connect") == 0) return 0;
 	if (command.compare("getmap") == 0) return 1;
 	if (command.compare("initializeplayer") == 0) return 2;
+	if (command.compare("requestplayer") == 0) return 3;
 
 	return -1;
 }

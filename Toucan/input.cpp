@@ -1,22 +1,22 @@
 #include "input.h"
 
-std::vector<SDL_Keycode> Input::keyList;
-bool Input::leftButtonDown;
-int Input::mouseX, Input::mouseY;
+std::vector<SDL_Keycode> keyList;
+bool leftButtonDown;
+int mouseX, mouseY;
 
-void Input::GetKeys(SDL_Event event) {
+void GetKeys(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {
-		if (std::find(Input::keyList.begin(), Input::keyList.end(), event.key.keysym.sym) == Input::keyList.end()) {
-			Input::keyList.push_back(event.key.keysym.sym);
+		if (std::find(keyList.begin(), keyList.end(), event.key.keysym.sym) == keyList.end()) {
+			keyList.push_back(event.key.keysym.sym);
 		}
 	}
 
 	if (event.type == SDL_KEYUP) {
-		Input::keyList.erase(std::remove(Input::keyList.begin(), Input::keyList.end(), event.key.keysym.sym), Input::keyList.end());
+		keyList.erase(std::remove(keyList.begin(), keyList.end(), event.key.keysym.sym), keyList.end());
 	}
 }
 
-void Input::GetButtons(SDL_Event event) {
+void GetButtons(SDL_Event event) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			leftButtonDown = true;
