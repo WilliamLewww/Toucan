@@ -10,7 +10,7 @@ struct Player {
 struct Client {
 	sockaddr_in address;
 	int addrLength = sizeof(address);
-	int status;
+	int uniqueID;
 
 	Player player;
 };

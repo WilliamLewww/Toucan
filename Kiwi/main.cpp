@@ -21,6 +21,8 @@ struct sockaddr_in server;
 int slen, recv_len;
 char buf[BUFLEN];
 
+int IncrementID = 0;
+
 bool isRunning = 1;
 int main() {
 	WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -37,20 +39,27 @@ int main() {
 	while (isRunning) {
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
-		std::cout << buf << std::endl;
+
+		//std::cout << "ADDRESS" << ":" << tempClient.address.sin_port << std::endl;
+		//std::cout << buf << std::endl;
 
 		switch (ProcessCommand(buf)) {
 			case 0 :
-				tempClient.status = 1;
-				if (AddConnection(tempClient, clientList)) SendMessage("connect", tempClient);
+				tempClient.uniqueID = IncrementID;
+				IncrementID += 1;
 
-				std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
+				if (AddConnection(tempClient)) SendMessage("connect", tempClient);
+
+				//std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
 				break;
 			case 1:
 				SendMap(tempClient);
 				break;
 			case 2:
 				InitializePlayer(tempClient);
+				break;
+			case 3:
+				RequestPlayer(tempClient);
 				break;
 		}
 	}

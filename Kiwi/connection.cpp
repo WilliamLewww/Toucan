@@ -7,7 +7,7 @@ int GetConnectionCount() {
 	return curConnections;
 }
 
-bool AddConnection(Client client, std::vector<Client> clientList) {
+bool AddConnection(Client client) {
 	CheckConnection();
 
 	if (curConnections < maxConnections) {
@@ -60,9 +60,12 @@ int ProcessCommand(char buf[]) {
 	return -1;
 }
 
-void InitializePlayer(Client client) {
+void InitializePlayer(Client &client) {
 	std::string tempPosition;
 	client.player.position = Vector2(rand() % (SCREENWIDTH - (client.player.width - 1)), rand() % (SCREENHEIGHT - (client.player.height - 1)));
+
+	std::cout << client.player.position.x << std::endl;
+
 	tempPosition = std::to_string((int)client.player.position.x);
 	tempPosition += ":";
 	tempPosition += std::to_string((int)client.player.position.y);
@@ -71,4 +74,16 @@ void InitializePlayer(Client client) {
 	strcpy(tempPositionChar, tempPosition.c_str());
 
 	SendMessage(tempPositionChar, client);
+}
+
+void RequestPlayer(Client client) {
+	std::string clientMessage;
+	for (auto &otherClient : clientList) {
+		if (otherClient.uniqueID != client.uniqueID) {
+			clientMessage += ":";
+			clientMessage += std::to_string((int)otherClient.player.position.x) + "," + std::to_string((int)otherClient.player.position.y);
+		}
+
+		//std::cout << otherClient.player.position.x << ":" << clientList.size() << std::endl;
+	}
 }

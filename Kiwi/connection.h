@@ -12,9 +12,10 @@
 static const int maxConnections = 5;
 static int curConnections;
 
-bool AddConnection(Client client, std::vector<Client> clientList);
+bool AddConnection(Client client);
 void CheckConnection();
 int ProcessCommand(char buf[]);
 
 int GetConnectionCount();
-void InitializePlayer(Client client);
+void InitializePlayer(Client &client);
+void RequestPlayer(Client client);
