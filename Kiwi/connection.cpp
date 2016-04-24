@@ -62,6 +62,8 @@ int ProcessCommand(char buf[]) {
 
 void InitializePlayer(Client &client) {
 	std::string tempPosition;
+
+	srand(time(NULL));
 	client.player.position = Vector2(rand() % (SCREENWIDTH - (client.player.width - 1)), rand() % (SCREENHEIGHT - (client.player.height - 1)));
 
 	std::cout << client.player.position.x << std::endl;
