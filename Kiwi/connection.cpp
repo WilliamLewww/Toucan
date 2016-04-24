@@ -3,6 +3,8 @@
 void ReceiveTimeout(Client client, bool* messageReceived, char buf[]);
 bool PingClient(Client client);
 
+std::vector<Client> clientList;
+
 int GetConnectionCount() {
 	return curConnections;
 }
@@ -66,8 +68,6 @@ void InitializePlayer(Client &client) {
 	srand(time(NULL));
 	client.player.position = Vector2(rand() % (SCREENWIDTH - (client.player.width - 1)), rand() % (SCREENHEIGHT - (client.player.height - 1)));
 
-	std::cout << client.player.position.x << std::endl;
-
 	tempPosition = std::to_string((int)client.player.position.x);
 	tempPosition += ":";
 	tempPosition += std::to_string((int)client.player.position.y);
@@ -85,7 +85,10 @@ void RequestPlayer(Client client) {
 			clientMessage += ":";
 			clientMessage += std::to_string((int)otherClient.player.position.x) + "," + std::to_string((int)otherClient.player.position.y);
 		}
-
-		//std::cout << otherClient.player.position.x << ":" << clientList.size() << std::endl;
 	}
+
+	char tempClientMessage[255];
+	strcpy(tempClientMessage, clientMessage.c_str());
+
+	SendMessage(tempClientMessage, client);
 }

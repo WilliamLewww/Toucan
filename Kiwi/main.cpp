@@ -21,7 +21,8 @@ struct sockaddr_in server;
 int slen, recv_len;
 char buf[BUFLEN];
 
-int IncrementID = 0;
+int incrementID = 0;
+int incrementIndex = -1;
 
 bool isRunning = 1;
 int main() {
@@ -37,29 +38,37 @@ int main() {
 	GenerateMap();
 
 	while (isRunning) {
+		incrementIndex = -1;
+
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
+
+		//std::cout << clientList.size() << std::endl;
+
+		for (int x = 0; x < clientList.size(); x++) {
+			if (tempClient.address.sin_port == clientList[x].address.sin_port) incrementIndex = x;
+		}
 
 		//std::cout << "ADDRESS" << ":" << tempClient.address.sin_port << std::endl;
 		//std::cout << buf << std::endl;
 
 		switch (ProcessCommand(buf)) {
 			case 0 :
-				tempClient.uniqueID = IncrementID;
-				IncrementID += 1;
+				tempClient.uniqueID = incrementID;
+				incrementID += 1;
 
 				if (AddConnection(tempClient)) SendMessage("connect", tempClient);
 
 				//std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
 				break;
 			case 1:
-				SendMap(tempClient);
+				SendMap(clientList[incrementIndex]);
 				break;
 			case 2:
-				InitializePlayer(tempClient);
+				InitializePlayer(clientList[incrementIndex]);
 				break;
 			case 3:
-				RequestPlayer(tempClient);
+				RequestPlayer(clientList[incrementIndex]);
 				break;
 		}
 	}
