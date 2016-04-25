@@ -72,14 +72,26 @@ void InitializePlayer(Client &client) {
 	tempPosition += ":";
 	tempPosition += std::to_string((int)client.player.position.y);
 
-	char tempPositionChar[255];
-	strcpy(tempPositionChar, tempPosition.c_str());
+	char tempPositionChar[BUFLEN];
+	strcpy(tempPositionChar, std::to_string((int)client.uniqueID).c_str());
+	SendMessage(tempPositionChar, client);
 
+	memset(tempPositionChar, '\0', BUFLEN);
+
+	strcpy(tempPositionChar, tempPosition.c_str());
 	SendMessage(tempPositionChar, client);
 }
 
 void RequestPlayer(Client client) {
 	std::string clientMessage;
+
+	for (auto &otherClient : clientList) {
+		if (otherClient.uniqueID != client.uniqueID) {
+			clientMessage += ".";
+			clientMessage += std::to_string((int)otherClient.uniqueID);
+		}
+	}
+
 	for (auto &otherClient : clientList) {
 		if (otherClient.uniqueID != client.uniqueID) {
 			clientMessage += ":";
@@ -87,8 +99,10 @@ void RequestPlayer(Client client) {
 		}
 	}
 
-	char tempClientMessage[255];
+	char tempClientMessage[BUFLEN];
 	strcpy(tempClientMessage, clientMessage.c_str());
+
+	std::cout << clientMessage.c_str() << std::endl;
 
 	SendMessage(tempClientMessage, client);
 }

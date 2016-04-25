@@ -9,6 +9,8 @@ void InitializePlayer() {
 
 	SendMessage("initializeplayer");
 	tempPosition = ReceiveInitialMessage().c_str();
+	localPlayer.uniqueID = atoi(tempPosition.c_str());
+	tempPosition = ReceiveInitialMessage().c_str();
 
 	for (int x = 0; x < tempPosition.size(); x++) {
 		if (tempPosition.at(x) != ':') {
@@ -28,6 +30,10 @@ void InitializePlayer() {
 void RequestPlayer() {
 	std::string tempMessage, tempCommand;
 	std::vector<std::string> positionList;
+	std::vector<int> idList;
+
+	int substringCount = 0;
+
 	bool flip = false;
 
 	SendMessage("requestplayer");
@@ -67,7 +73,8 @@ void RequestPlayer() {
 	}
 
 	for (auto &player : playerList) {
-		std::cout << player.position.x << ":" << player.position.y << std::endl;
+		//std::cout << player.uniqueID << std::endl;
+		//std::cout << player.position.x << ":" << player.position.y << std::endl;
 	}
 }
 
@@ -78,7 +85,7 @@ void UpdateLocalPlayer(int gameTime) {
 	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 1;
 
 	if (originalPosition != localPlayer.position) {
-		char positionChar[255];
+		char positionChar[BUFLEN];
 		strcpy(positionChar, (std::to_string((int)localPlayer.position.x) + ":" + std::to_string((int)localPlayer.position.y)).c_str());
 		SendMessage(positionChar);
 	}
