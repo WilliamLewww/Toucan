@@ -14,6 +14,7 @@ struct Player {
 };
 
 extern Player localPlayer;
+extern std::vector<Player> playerList;
 
 void InitializePlayer();
 void RequestPlayer();

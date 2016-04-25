@@ -43,14 +43,9 @@ int main() {
 		memset(buf, '\0', BUFLEN);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *)&tempClient.address, &tempClient.addrLength);
 
-		//std::cout << clientList.size() << std::endl;
-
 		for (int x = 0; x < clientList.size(); x++) {
 			if (tempClient.address.sin_port == clientList[x].address.sin_port) incrementIndex = x;
 		}
-
-		//std::cout << "ADDRESS" << ":" << tempClient.address.sin_port << std::endl;
-		//std::cout << buf << std::endl;
 
 		switch (ProcessCommand(buf)) {
 			case 0 :
@@ -59,7 +54,7 @@ int main() {
 
 				if (AddConnection(tempClient)) SendMessage("connect", tempClient);
 
-				//std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
+				std::cout << GetConnectionCount() << "/" << maxConnections << std::endl;
 				break;
 			case 1:
 				SendMap(clientList[incrementIndex]);
@@ -71,6 +66,8 @@ int main() {
 				RequestPlayer(clientList[incrementIndex]);
 				break;
 		}
+
+		std::cout << buf << std::endl;
 	}
 
 	closesocket(s);

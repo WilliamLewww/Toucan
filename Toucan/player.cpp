@@ -1,5 +1,6 @@
 #include "player.h"
 
+std::vector<Player> playerList;
 Player localPlayer;
 
 void InitializePlayer() {
@@ -22,12 +23,52 @@ void InitializePlayer() {
 	localPlayer.position.x = atoi(positionX.c_str());
 	localPlayer.position.y = atoi(positionY.c_str());
 	localPlayer.valid = true;
-
-	std::cout << localPlayer.position.x << ":" << localPlayer.position.y << std::endl;
 }
 
 void RequestPlayer() {
+	std::string tempMessage, tempCommand;
+	std::vector<std::string> positionList;
+	bool flip = false;
+
 	SendMessage("requestplayer");
+	tempMessage = ReceiveInitialMessage().c_str();
+
+	if (tempMessage.length() == 0) return;
+
+	for (int x = 1; x < tempMessage.length(); x++) {
+		if (tempMessage[x] != ':') { tempCommand += tempMessage[x]; }
+		else {
+			positionList.push_back(tempCommand);
+			tempCommand = "";
+		}
+	}
+
+	positionList.push_back(tempCommand);
+	tempMessage = "";
+	tempCommand = "";
+
+	for (int x = 0; x < positionList.size(); x++) {
+		Player tempPlayer;
+		tempPlayer.valid = true;
+
+		for (int y = 0; y < positionList[x].length(); y++) {
+			if (positionList[x].at(y) == ',') { flip = true; y += 1; }
+			if (flip == false) tempMessage += positionList[x].at(y);
+			if (flip == true) tempCommand += positionList[x].at(y);
+		}
+
+		tempPlayer.position.x = atoi(tempMessage.c_str());
+		tempPlayer.position.y = atoi(tempCommand.c_str());
+		playerList.push_back(tempPlayer);
+
+		tempMessage = "";
+		tempCommand = "";
+		flip = false;
+	}
+
+	for (auto &player : playerList) {
+		std::cout << player.position.x << ":" << player.position.y << std::endl;
+	}
 }
 
 void UpdateLocalPlayer(int gameTime) {

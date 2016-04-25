@@ -9,10 +9,7 @@ void GetMap() {
 
 		for (int x = 0; x < MAPSIZEX; x++) {
 			tileMap[y][x] = mapLine.at(x) - 48;
-			std::cout << tileMap[y][x];
 		}
-
-		std::cout << std::endl;
 	}
 }
 
