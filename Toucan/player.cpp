@@ -32,14 +32,27 @@ void RequestPlayer() {
 	std::vector<std::string> positionList;
 	std::vector<int> idList;
 
-	int substringCount = 0;
-
 	bool flip = false;
 
 	SendMessage("requestplayer");
 	tempMessage = ReceiveInitialMessage().c_str();
 
 	if (tempMessage.length() == 0) return;
+
+	for (int x = 1; x < tempMessage.length(); x++) {
+		if (tempMessage[x] == ':') goto jump;
+		if (tempMessage[x] != '.') tempCommand += tempMessage[x];
+		else {
+			idList.push_back(atoi(tempCommand.c_str()));
+			tempCommand = "";
+		}
+	}
+
+jump:
+
+	idList.push_back(atoi(tempCommand.c_str()));
+	tempCommand = "";
+	tempMessage = tempMessage.substr(tempMessage.find(':'));
 
 	for (int x = 1; x < tempMessage.length(); x++) {
 		if (tempMessage[x] != ':') { tempCommand += tempMessage[x]; }
@@ -72,10 +85,7 @@ void RequestPlayer() {
 		flip = false;
 	}
 
-	for (auto &player : playerList) {
-		//std::cout << player.uniqueID << std::endl;
-		//std::cout << player.position.x << ":" << player.position.y << std::endl;
-	}
+	for (int x = 0; x < idList.size(); x++) playerList[x].uniqueID = idList[x];
 }
 
 void UpdateLocalPlayer(int gameTime) {

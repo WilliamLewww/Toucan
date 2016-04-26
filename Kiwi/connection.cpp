@@ -102,7 +102,5 @@ void RequestPlayer(Client client) {
 	char tempClientMessage[BUFLEN];
 	strcpy(tempClientMessage, clientMessage.c_str());
 
-	std::cout << clientMessage.c_str() << std::endl;
-
 	SendMessage(tempClientMessage, client);
 }
