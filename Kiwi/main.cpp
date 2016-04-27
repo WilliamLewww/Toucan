@@ -13,6 +13,7 @@
 
 void SendMessage(char message[], Client client);
 void SendMessage(char message[], std::vector<Client> clientList);
+void SendMessage(char message[], Client negClient, std::vector<Client> clientList);
 
 SOCKET s;
 WSADATA wsa;
@@ -47,6 +48,8 @@ int main() {
 			if (tempClient.address.sin_port == clientList[x].address.sin_port) incrementIndex = x;
 		}
 
+		std::string tempMessage = "";
+
 		switch (ProcessCommand(buf)) {
 			case 0 :
 				tempClient.uniqueID = incrementID;
@@ -61,6 +64,14 @@ int main() {
 				break;
 			case 2:
 				InitializePlayer(clientList[incrementIndex]);
+
+				tempMessage += "advert<position>" + std::to_string((int)clientList[incrementIndex].uniqueID) + ":";
+				tempMessage += std::to_string((int)clientList[incrementIndex].player.position.x) + "," + std::to_string((int)clientList[incrementIndex].player.position.y);
+
+				char tempMessageChar[BUFLEN];
+				strcpy(tempMessageChar, tempMessage.c_str());
+				SendMessage(tempMessageChar, clientList[incrementIndex], clientList);
+
 				break;
 			case 3:
 				RequestPlayer(clientList[incrementIndex]);
@@ -82,6 +93,12 @@ void SendMessage(char message[], Client client) {
 
 void SendMessage(char message[], std::vector<Client> clientList) {
 	for (auto &client : clientList) SendMessage(message, client);
+}
+
+void SendMessage(char message[], Client negClient, std::vector<Client> clientList) {
+	for (auto &client : clientList) {
+		if (client.uniqueID != negClient.uniqueID) SendMessage(message, client);
+	}
 }
 
 void ReceiveMessage(char message[], Client client) {

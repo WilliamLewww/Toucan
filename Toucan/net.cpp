@@ -28,8 +28,8 @@ void ReceiveMessage() {
 		recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &server, &slen);
 		std::string message(buf);
 
-		if (message.substr(0, 5).compare("reply") == 0) newestReply = buf;
-		else if (message.substr(0, 6).compare("advert") == 0) newestAdvert = buf;
+		if (message.substr(0, 5).compare("reply") == 0) newestReply = message.substr(message.find('>'));
+		else if (message.substr(0, 6).compare("advert") == 0)	newestAdvert = message.substr(message.find('>'));
 	}
 }
 
