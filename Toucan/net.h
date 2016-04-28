@@ -25,3 +25,5 @@ void SetServerIP(char IP[]);
 void ReceiveMessage();
 extern std::string newestReply;
 extern std::string newestAdvert;
+
+int ProcessMessage(std::string message);

@@ -27,6 +27,11 @@ void InitializePlayer() {
 	localPlayer.valid = true;
 }
 
+void AddPlayer(std::string message) {
+	std::string tempMessage = message.substr(message.find('>') + 1);
+	std::cout << tempMessage.c_str() << std::endl;
+}
+
 void RequestPlayer() {
 	std::string tempMessage, tempCommand;
 	std::vector<std::string> positionList;

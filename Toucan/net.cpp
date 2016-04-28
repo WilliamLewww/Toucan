@@ -29,8 +29,22 @@ void ReceiveMessage() {
 		std::string message(buf);
 
 		if (message.substr(0, 5).compare("reply") == 0) newestReply = message.substr(message.find('<') + 1);
-		else if (message.substr(0, 6).compare("advert") == 0)	newestAdvert = message.substr(message.find('<') + 1);
+		else if (message.substr(0, 6).compare("advert") == 0) newestAdvert = message.substr(message.find('<') + 1);
 	}
+}
+
+void ResetAdvert() {
+	newestAdvert = "";
+}
+
+int ProcessMessage(std::string message) {
+	if (!message.empty()) {
+		if (message.substr(0, 8).compare("position") == 0) {
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 std::string ReceiveInitialMessage() {

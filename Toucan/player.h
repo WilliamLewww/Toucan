@@ -22,3 +22,4 @@ void InitializePlayer();
 void RequestPlayer();
 void UpdateLocalPlayer(int gameTime);
 void DrawPlayer(Player player);
+void AddPlayer(std::string message);

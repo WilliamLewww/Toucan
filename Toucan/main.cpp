@@ -65,6 +65,10 @@ int main(int argc, char *argv[]) {
 
 void Update(int gameTime) {
 	joiner.Update(gameTime);
+
+	if (ProcessMessage(newestAdvert) == 1) {
+		AddPlayer(newestAdvert);
+	}
 }
 
 void Render(SDL_Window* window, SDL_GLContext context) {
