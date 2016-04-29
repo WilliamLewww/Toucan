@@ -34,14 +34,12 @@ void ReceiveMessage() {
 }
 
 void ResetAdvert() {
-	newestAdvert = "";
+	newestAdvert.clear();
 }
 
 int ProcessMessage(std::string message) {
 	if (!message.empty()) {
-		if (message.substr(0, 8).compare("position") == 0) {
-			return 1;
-		}
+		if (message.substr(0, 8).compare("position") == 0)	return 1;
 	}
 
 	return 0;

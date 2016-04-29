@@ -29,7 +29,42 @@ void InitializePlayer() {
 
 void AddPlayer(std::string message) {
 	std::string tempMessage = message.substr(message.find('>') + 1);
-	std::cout << tempMessage.c_str() << std::endl;
+	std::string tempPlaceHolder, tempPlaceHolderB;
+
+	bool flip = false;
+
+	float positionX, positionY;
+	int userID;
+
+	for (int x = 0; x < tempMessage.length(); x++) {
+		if (tempMessage[x] == ':') goto jump;
+		tempPlaceHolder += tempMessage[x];
+	}
+
+jump:
+	userID = atoi(tempPlaceHolder.c_str());
+	for (int x = 0; x < playerList.size(); x++) { if (playerList[x].uniqueID == userID) return; }
+
+	tempPlaceHolder.clear();
+	tempMessage = tempMessage.substr(tempMessage.find(':') + 1);
+
+	for (int x = 0; x < tempMessage.length(); x++) {
+		if (flip == false && tempMessage.at(x) != ',') tempPlaceHolder += tempMessage[x];
+		if (flip == true) tempPlaceHolderB += tempMessage[x];
+		if (tempMessage.at(x) == ',') flip = true;
+	}
+
+	positionX = atoi(tempPlaceHolder.c_str());
+	positionY = atoi(tempPlaceHolderB.c_str());
+
+	Player tempPlayer;
+	tempPlayer.position = Vector2(positionX, positionY);
+	tempPlayer.valid = true;
+	tempPlayer.uniqueID = userID;
+
+	playerList.push_back(tempPlayer);
+
+	ResetAdvert();
 }
 
 void RequestPlayer() {
@@ -49,27 +84,27 @@ void RequestPlayer() {
 		if (tempMessage[x] != '.') tempCommand += tempMessage[x];
 		else {
 			idList.push_back(atoi(tempCommand.c_str()));
-			tempCommand = "";
+			tempCommand.clear();
 		}
 	}
 
 jump:
 
 	idList.push_back(atoi(tempCommand.c_str()));
-	tempCommand = "";
+	tempCommand.clear();
 	tempMessage = tempMessage.substr(tempMessage.find(':'));
 
 	for (int x = 1; x < tempMessage.length(); x++) {
 		if (tempMessage[x] != ':') { tempCommand += tempMessage[x]; }
 		else {
 			positionList.push_back(tempCommand);
-			tempCommand = "";
+			tempCommand.clear();
 		}
 	}
 
 	positionList.push_back(tempCommand);
-	tempMessage = "";
-	tempCommand = "";
+	tempMessage.clear();
+	tempCommand.clear();
 
 	for (int x = 0; x < positionList.size(); x++) {
 		Player tempPlayer;
@@ -85,8 +120,8 @@ jump:
 		tempPlayer.position.y = atoi(tempCommand.c_str());
 		playerList.push_back(tempPlayer);
 
-		tempMessage = "";
-		tempCommand = "";
+		tempMessage.clear();
+		tempCommand.clear();
 		flip = false;
 	}
 

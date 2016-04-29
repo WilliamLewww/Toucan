@@ -23,6 +23,7 @@ void CleanUp();
 void SetServerIP(char IP[]);
 
 void ReceiveMessage();
+void ResetAdvert();
 extern std::string newestReply;
 extern std::string newestAdvert;
 
