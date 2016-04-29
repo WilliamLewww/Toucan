@@ -76,6 +76,9 @@ int main() {
 			case 3:
 				RequestPlayer(clientList[incrementIndex]);
 				break;
+			case 4:
+				UpdatePosition(clientList[incrementIndex], buf);
+				break;
 		}
 
 		std::cout << buf << std::endl;

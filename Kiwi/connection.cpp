@@ -58,8 +58,24 @@ int ProcessCommand(char buf[]) {
 	if (command.compare("getmap") == 0) return 1;
 	if (command.compare("initializeplayer") == 0) return 2;
 	if (command.compare("requestplayer") == 0) return 3;
+	if (command.compare(0, 9,"position>") == 0) return 4;
 
 	return -1;
+}
+
+void UpdatePosition(Client &client, char buf[]) {
+	std::string message(buf), tempMessage, tempMessageB;
+	message = message.substr(message.find('>') + 1);
+
+	bool flip = false;
+
+	for (int x = 0; x < message.length(); x++) {
+		if (flip == false && message.at(x) != ',') tempMessage += message[x];
+		if (flip == true) tempMessageB += message[x];
+		if (message.at(x) == ',') flip = true;
+	}
+
+	client.player.position = Vector2(atoi(tempMessage.c_str()), atoi(tempMessageB.c_str()));
 }
 
 void InitializePlayer(Client &client) {

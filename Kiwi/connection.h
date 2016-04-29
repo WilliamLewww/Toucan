@@ -19,3 +19,4 @@ int ProcessCommand(char buf[]);
 int GetConnectionCount();
 void InitializePlayer(Client &client);
 void RequestPlayer(Client client);
+void UpdatePosition(Client &client, char buf[]);

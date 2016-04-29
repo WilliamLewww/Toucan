@@ -43,7 +43,9 @@ void AddPlayer(std::string message) {
 
 jump:
 	userID = atoi(tempPlaceHolder.c_str());
-	for (int x = 0; x < playerList.size(); x++) { if (playerList[x].uniqueID == userID) return; }
+	for (int x = 0; x < playerList.size(); x++) { 
+		if (playerList[x].uniqueID == userID) { ResetAdvert(); return; }
+	}
 
 	tempPlaceHolder.clear();
 	tempMessage = tempMessage.substr(tempMessage.find(':') + 1);
@@ -89,7 +91,6 @@ void RequestPlayer() {
 	}
 
 jump:
-
 	idList.push_back(atoi(tempCommand.c_str()));
 	tempCommand.clear();
 	tempMessage = tempMessage.substr(tempMessage.find(':'));
@@ -136,7 +137,7 @@ void UpdateLocalPlayer(int gameTime) {
 
 	if (originalPosition != localPlayer.position) {
 		char positionChar[BUFLEN];
-		strcpy(positionChar, (std::to_string((int)localPlayer.position.x) + ":" + std::to_string((int)localPlayer.position.y)).c_str());
+		strcpy(positionChar, ("position>" + std::to_string((int)localPlayer.position.x) + "," + std::to_string((int)localPlayer.position.y)).c_str());
 		SendMessage(positionChar);
 	}
 }
