@@ -11,10 +11,6 @@
 #define BUFLEN 512
 #define PORT 27861
 
-void SendMessage(char message[], Client client);
-void SendMessage(char message[], std::vector<Client> clientList);
-void SendMessage(char message[], Client negClient, std::vector<Client> clientList);
-
 SOCKET s;
 WSADATA wsa;
 

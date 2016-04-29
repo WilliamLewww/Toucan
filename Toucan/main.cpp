@@ -67,7 +67,7 @@ void Update(int gameTime) {
 	joiner.Update(gameTime);
 
 	if (ProcessMessage(newestAdvert) == 1) {
-		AddPlayer(newestAdvert);
+		UpdatePlayer(newestAdvert);
 	}
 }
 

@@ -76,6 +76,14 @@ void UpdatePosition(Client &client, char buf[]) {
 	}
 
 	client.player.position = Vector2(atoi(tempMessage.c_str()), atoi(tempMessageB.c_str()));
+	tempMessage.clear();
+
+	tempMessage += "advert<position>" + std::to_string((int)client.uniqueID) + ":";
+	tempMessage += std::to_string((int)client.player.position.x) + "," + std::to_string((int)client.player.position.y);
+
+	char tempMessageChar[BUFLEN];
+	strcpy(tempMessageChar, tempMessage.c_str());
+	SendMessage(tempMessageChar, client, clientList);
 }
 
 void InitializePlayer(Client &client) {

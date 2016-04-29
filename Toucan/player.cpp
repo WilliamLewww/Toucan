@@ -27,7 +27,7 @@ void InitializePlayer() {
 	localPlayer.valid = true;
 }
 
-void AddPlayer(std::string message) {
+void UpdatePlayer(std::string message) {
 	std::string tempMessage = message.substr(message.find('>') + 1);
 	std::string tempPlaceHolder, tempPlaceHolderB;
 
@@ -43,10 +43,6 @@ void AddPlayer(std::string message) {
 
 jump:
 	userID = atoi(tempPlaceHolder.c_str());
-	for (int x = 0; x < playerList.size(); x++) { 
-		if (playerList[x].uniqueID == userID) { ResetAdvert(); return; }
-	}
-
 	tempPlaceHolder.clear();
 	tempMessage = tempMessage.substr(tempMessage.find(':') + 1);
 
@@ -58,6 +54,10 @@ jump:
 
 	positionX = atoi(tempPlaceHolder.c_str());
 	positionY = atoi(tempPlaceHolderB.c_str());
+
+	for (int x = 0; x < playerList.size(); x++) {
+		if (playerList[x].uniqueID == userID) { playerList[x].position = Vector2(positionX, positionY); ResetAdvert(); return; }
+	}
 
 	Player tempPlayer;
 	tempPlayer.position = Vector2(positionX, positionY);
