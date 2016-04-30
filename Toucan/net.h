@@ -24,6 +24,7 @@ void SetServerIP(char IP[]);
 
 void ReceiveMessage();
 void ResetAdvert();
+void ResetReply();
 extern std::string newestReply;
 extern std::string newestAdvert;
 

@@ -25,16 +25,21 @@ void SendMessage(char message[]) {
 
 void ReceiveMessage() {
 	while (true) {
+		memset(buf, '\0', BUFLEN);
 		recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &server, &slen);
 		std::string message(buf);
 
-		if (message.substr(0, 5).compare("reply") == 0) newestReply = message.substr(message.find('<') + 1);
-		else if (message.substr(0, 6).compare("advert") == 0) newestAdvert = message.substr(message.find('<') + 1);
+		if (message.substr(0, 5).compare("reply") == 0) { newestReply = message.substr(message.find('<') + 1); }
+		else if (message.substr(0, 6).compare("advert") == 0) { newestAdvert = message.substr(message.find('<') + 1); }
 	}
 }
 
 void ResetAdvert() {
 	newestAdvert.clear();
+}
+
+void ResetReply() {
+	newestReply.clear();
 }
 
 int ProcessMessage(std::string message) {
