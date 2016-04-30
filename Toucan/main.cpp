@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 			GetKeys(event);
 		}
 
-		if (deltaTime < 1) {
+		if (deltaTime < 1 / 60) {
 			frameStart = SDL_GetTicks();
 			SDL_Delay(1);
 			frameEnd = SDL_GetTicks();

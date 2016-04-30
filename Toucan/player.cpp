@@ -130,14 +130,19 @@ jump:
 }
 
 void UpdateLocalPlayer(int gameTime) {
+	float deltaTimeS = (float)(gameTime) / 1000;
+
 	Vector2 originalPosition = localPlayer.position;
 
-	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end()) localPlayer.position.x -= 1;
-	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 1;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end()) localPlayer.position.x -=  50 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 50 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_UP) != keyList.end()) localPlayer.position.y -= 50 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_DOWN) != keyList.end()) localPlayer.position.y += 50 * deltaTimeS;
 
 	if (originalPosition != localPlayer.position) {
 		char positionChar[BUFLEN];
-		strcpy(positionChar, ("position>" + std::to_string((int)localPlayer.position.x) + "," + std::to_string((int)localPlayer.position.y)).c_str());
+		std::string positionX(std::to_string(localPlayer.position.x)), positionY(std::to_string(localPlayer.position.y).c_str());
+		strcpy(positionChar, ("position>" + positionX.substr(0, positionX.find('.') + 3) + "," + positionY.substr(0, positionY.find('.') + 3)).c_str());
 		SendMessage(positionChar);
 	}
 }

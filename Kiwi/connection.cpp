@@ -79,7 +79,7 @@ void UpdatePosition(Client &client, char buf[]) {
 	tempMessage.clear();
 
 	tempMessage += "advert<position>" + std::to_string((int)client.uniqueID) + ":";
-	tempMessage += std::to_string((int)client.player.position.x) + "," + std::to_string((int)client.player.position.y);
+	tempMessage += std::to_string(client.player.position.x) + "," + std::to_string(client.player.position.y);
 
 	char tempMessageChar[BUFLEN];
 	strcpy(tempMessageChar, tempMessage.c_str());
@@ -92,9 +92,9 @@ void InitializePlayer(Client &client) {
 	srand(time(NULL));
 	client.player.position = Vector2(rand() % (SCREENWIDTH - (client.player.width - 1)), rand() % (SCREENHEIGHT - (client.player.height - 1)));
 
-	tempPosition = std::to_string((int)client.player.position.x);
+	tempPosition = std::to_string(client.player.position.x);
 	tempPosition += ":";
-	tempPosition += std::to_string((int)client.player.position.y);
+	tempPosition += std::to_string(client.player.position.y);
 
 	char tempPositionChar[BUFLEN];
 	strcpy(tempPositionChar, std::to_string((int)client.uniqueID).c_str());
@@ -119,7 +119,7 @@ void RequestPlayer(Client client) {
 	for (auto &otherClient : clientList) {
 		if (otherClient.uniqueID != client.uniqueID) {
 			clientMessage += ":";
-			clientMessage += std::to_string((int)otherClient.player.position.x) + "," + std::to_string((int)otherClient.player.position.y);
+			clientMessage += std::to_string(otherClient.player.position.x) + "," + std::to_string(otherClient.player.position.y);
 		}
 	}
 
