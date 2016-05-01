@@ -29,3 +29,7 @@ bool Vector2::operator!=(Vector2 vector) {
 	if (x != vector.x || y != vector.y) return true;
 	return false;
 }
+
+std::ostream &operator<<(std::ostream &os, Vector2 const &m) {
+	return os << m.x << "," << m.y;
+}

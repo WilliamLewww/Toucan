@@ -15,5 +15,5 @@ void Joiner::Update(int gameTime) {
 void Joiner::Render() {
 	if (localPlayer.valid) DrawPlayer(localPlayer);
 	for (auto &player : playerList) { DrawPlayer(player); }
-	DrawMap();
+	DrawMap(tileMap);
 }

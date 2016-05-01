@@ -13,6 +13,11 @@ struct Player {
 	bool valid = false;
 
 	int uniqueID;
+
+	inline double top() { return position.y; }
+	inline double bottom() { return position.y + height; }
+	inline double left() { return position.x; }
+	inline double right() { return position.x + width; }
 };
 
 extern Player localPlayer;
