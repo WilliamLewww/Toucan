@@ -1,9 +1,10 @@
 #include "player.h"
 
 std::vector<Player> playerList;
-Player localPlayer;
+LocalPlayer localPlayer;
 
 bool CheckCollision(Tile tile);
+void CheckSide(Tile tile, int &top, int &left);
 
 void InitializePlayer() {
 	std::string tempPosition, positionX, positionY;
@@ -136,16 +137,28 @@ void UpdateLocalPlayer(int gameTime) {
 
 	Vector2 originalPosition = localPlayer.position;
 
-	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end()) localPlayer.position.x -=  50 * deltaTimeS;
-	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 50 * deltaTimeS;
-	if (std::find(keyList.begin(), keyList.end(), SDLK_UP) != keyList.end()) localPlayer.position.y -= 50 * deltaTimeS;
-	if (std::find(keyList.begin(), keyList.end(), SDLK_DOWN) != keyList.end()) localPlayer.position.y += 50 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end()) localPlayer.position.x -=  100 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 100 * deltaTimeS;
 
+	if (localPlayer.onGround == true) { 
+		if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) { 
+			localPlayer.velocityY = -3.5; localPlayer.onGround = false; 
+		} 
+	}
+
+	localPlayer.position.x += localPlayer.velocityX;
+	localPlayer.position.y += localPlayer.velocityY;
+
+	localPlayer.velocityY += 9.8 * deltaTimeS;
+
+	int placementX = 0, placementY = 0;
 	for (auto &tile : tileMap) {
 		if (CheckCollision(tile) == true) {
-			std::cout << "COLLISION" << std::endl;
+			CheckSide(tile, placementX, placementY);
 		}
 	}
+
+	if (placementY < 0) { localPlayer.velocityY = 0; localPlayer.position.y = -placementY - localPlayer.height; localPlayer.onGround = true; }
 
 	if (originalPosition != localPlayer.position) {
 		char positionChar[BUFLEN];
@@ -171,7 +184,36 @@ bool CheckCollision(Tile tile) {
 	return false;
 }
 
+void CheckSide(Tile tile, int &placementX, int &placementY) {
+	if (localPlayer.midpoint().y < tile.midpoint().y) placementY = -tile.top();
+	if (localPlayer.midpoint().y > tile.midpoint().y) placementY = tile.bottom();
+	if (localPlayer.midpoint().x < tile.midpoint().x) placementX = -tile.left();
+	if (localPlayer.midpoint().x > tile.midpoint().x) placementX = tile.right();
+}
+
+
 void DrawPlayer(Player player) {
+	Vector2 vectors[4]{
+		Vector2(0, 0),
+		Vector2(1, 0),
+		Vector2(1, 1),
+		Vector2(0, 1)
+	};
+
+	glBegin(GL_QUADS);
+	glColor3f(0, 255, 0);
+	for (int x = 0; x < 4; x++) {
+		vectors[x].x *= player.width;
+		vectors[x].y *= player.height;
+		vectors[x] += Vector2(player.position.x, player.position.y);
+		vectors[x] -= Vector2(SCREENWIDTH / 2, SCREENHEIGHT / 2);
+
+		glVertex2d(vectors[x].x, vectors[x].y);
+	}
+	glEnd();
+}
+
+void DrawPlayer(LocalPlayer player) {
 	Vector2 vectors[4]{
 		Vector2(0, 0),
 		Vector2(1, 0),
