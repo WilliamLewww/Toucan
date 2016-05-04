@@ -4,7 +4,6 @@ std::vector<Player> playerList;
 LocalPlayer localPlayer;
 
 bool CheckCollision(Tile tile);
-void CheckSide(Tile tile, int &top, int &left);
 
 void InitializePlayer() {
 	std::string tempPosition, positionX, positionY;
@@ -55,8 +54,8 @@ jump:
 		if (tempMessage.at(x) == ',') flip = true;
 	}
 
-	positionX = std::stof(tempPlaceHolder.c_str());
-	positionY = std::stof(tempPlaceHolderB.c_str());
+	positionX = atof(tempPlaceHolder.c_str());
+	positionY = atof(tempPlaceHolderB.c_str());
 
 	for (std::size_t x = 0; x < playerList.size(); x++) {
 		if (playerList[x].uniqueID == userID) { playerList[x].position = Vector2(positionX, positionY); ResetAdvert(); return; }
@@ -136,9 +135,10 @@ void UpdateLocalPlayer(int gameTime) {
 	float deltaTimeS = (float)(gameTime) / 1000;
 
 	Vector2 originalPosition = localPlayer.position;
+	localPlayer.velocityX = 0;
 
-	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end()) localPlayer.position.x -=  100 * deltaTimeS;
-	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end()) localPlayer.position.x += 100 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) == keyList.end()) localPlayer.velocityX =  -100 * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_LEFT) == keyList.end()) localPlayer.velocityX = 100 * deltaTimeS;
 
 	if (localPlayer.onGround == true) { 
 		if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) { 
@@ -151,14 +151,30 @@ void UpdateLocalPlayer(int gameTime) {
 
 	localPlayer.velocityY += 9.8 * deltaTimeS;
 
-	int placementX = 0, placementY = 0;
 	for (auto &tile : tileMap) {
 		if (CheckCollision(tile) == true) {
-			CheckSide(tile, placementX, placementY);
+			if (localPlayer.bottom() > tile.top() && localPlayer.bottom() < tile.top() + 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
+				localPlayer.onGround = true;
+				localPlayer.velocityY = 0;
+				localPlayer.position.y = tile.top() - tile.height;
+			}
+
+			if (localPlayer.top() < tile.bottom() && localPlayer.top() > tile.top() - 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
+				if (localPlayer.velocityY < 0) localPlayer.velocityY = 0;
+				localPlayer.position.y = tile.bottom();
+			}
+
+			if (localPlayer.left() < tile.right() && localPlayer.left() > tile.right() - 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
+				if (localPlayer.velocityX < 0) localPlayer.velocityX = 0;
+				localPlayer.position.x = tile.left() + tile.width;
+			}
+
+			if (localPlayer.right() > tile.left() && localPlayer.right() < tile.left() + 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
+				if (localPlayer.velocityX > 0) localPlayer.velocityX = 0;
+				localPlayer.position.x = tile.left() - localPlayer.width;
+			}
 		}
 	}
-
-	if (placementY < 0) { localPlayer.velocityY = 0; localPlayer.position.y = -placementY - localPlayer.height; localPlayer.onGround = true; }
 
 	if (originalPosition != localPlayer.position) {
 		char positionChar[BUFLEN];
@@ -183,14 +199,6 @@ bool CheckCollision(Tile tile) {
 
 	return false;
 }
-
-void CheckSide(Tile tile, int &placementX, int &placementY) {
-	if (localPlayer.midpoint().y < tile.midpoint().y) placementY = -tile.top();
-	if (localPlayer.midpoint().y > tile.midpoint().y) placementY = tile.bottom();
-	if (localPlayer.midpoint().x < tile.midpoint().x) placementX = -tile.left();
-	if (localPlayer.midpoint().x > tile.midpoint().x) placementX = tile.right();
-}
-
 
 void DrawPlayer(Player player) {
 	Vector2 vectors[4]{

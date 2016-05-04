@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL_opengl.h>
 #include <string>
-#include <stdlib.h>
 #include "vector2.h"
 #include "net.h"
 #include "main.h"
