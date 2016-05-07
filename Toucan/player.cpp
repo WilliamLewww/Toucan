@@ -4,6 +4,7 @@ std::vector<Player> playerList;
 LocalPlayer localPlayer;
 
 bool CheckCollision(Tile tile);
+void CheckCollisionSpecific(Tile tile);
 
 void InitializePlayer() {
 	std::string tempPosition, positionX, positionY;
@@ -152,28 +153,7 @@ void UpdateLocalPlayer(int gameTime) {
 	localPlayer.velocityY += 9.8 * deltaTimeS;
 
 	for (auto &tile : tileMap) {
-		if (CheckCollision(tile) == true) {
-			if (localPlayer.bottom() > tile.top() && localPlayer.bottom() < tile.top() + 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
-				localPlayer.onGround = true;
-				localPlayer.velocityY = 0;
-				localPlayer.position.y = tile.top() - tile.height;
-			}
-
-			if (localPlayer.top() < tile.bottom() && localPlayer.top() > tile.top() - 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
-				if (localPlayer.velocityY < 0) localPlayer.velocityY = 0;
-				localPlayer.position.y = tile.bottom();
-			}
-
-			if (localPlayer.left() < tile.right() && localPlayer.left() > tile.right() - 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
-				if (localPlayer.velocityX < 0) localPlayer.velocityX = 0;
-				localPlayer.position.x = tile.left() + tile.width;
-			}
-
-			if (localPlayer.right() > tile.left() && localPlayer.right() < tile.left() + 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
-				if (localPlayer.velocityX > 0) localPlayer.velocityX = 0;
-				localPlayer.position.x = tile.left() - localPlayer.width;
-			}
-		}
+		if (CheckCollision(tile) == true) CheckCollisionSpecific(tile);
 	}
 
 	if (originalPosition != localPlayer.position) {
@@ -198,6 +178,29 @@ bool CheckCollision(Tile tile) {
 	}
 
 	return false;
+}
+
+void CheckCollisionSpecific(Tile tile) {
+	if (localPlayer.bottom() > tile.top() && localPlayer.bottom() < tile.top() + 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
+		localPlayer.onGround = true;
+		localPlayer.velocityY = 0;
+		localPlayer.position.y = tile.top() - tile.height;
+	}
+
+	if (localPlayer.top() < tile.bottom() && localPlayer.top() > tile.top() - 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
+		if (localPlayer.velocityY < 0) localPlayer.velocityY = 0;
+		localPlayer.position.y = tile.bottom();
+	}
+
+	if (localPlayer.left() < tile.right() && localPlayer.left() > tile.right() - 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
+		if (localPlayer.velocityX < 0) localPlayer.velocityX = 0;
+		localPlayer.position.x = tile.left() + tile.width;
+	}
+
+	if (localPlayer.right() > tile.left() && localPlayer.right() < tile.left() + 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
+		if (localPlayer.velocityX > 0) localPlayer.velocityX = 0;
+		localPlayer.position.x = tile.left() - localPlayer.width;
+	}
 }
 
 void DrawPlayer(Player player) {

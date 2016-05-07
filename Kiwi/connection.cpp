@@ -90,7 +90,7 @@ void InitializePlayer(Client &client) {
 	std::string tempPosition;
 
 	srand(time(NULL));
-	client.player.position = Vector2(rand() % (SCREENWIDTH - (client.player.width - 1)), rand() % (SCREENHEIGHT - (client.player.height - 1)));
+	client.player.position = Vector2((rand() % client.player.width * 28) + (client.player.width * 7), (rand() % client.player.height * 13) + (client.player.height * 15));
 
 	tempPosition = std::to_string(client.player.position.x);
 	tempPosition += ":";
