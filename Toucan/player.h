@@ -22,6 +22,8 @@ struct LocalPlayer {
 
 	bool onGround = false;
 	double velocityX, velocityY;
+
+	double speed = 100;
 };
 
 struct Player {
