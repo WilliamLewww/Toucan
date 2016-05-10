@@ -9,7 +9,7 @@
 
 #define BUFLEN 512
 
-static const int maxConnections = 5;
+static const int maxConnections = 100;
 static int curConnections;
 
 bool AddConnection(Client client);
