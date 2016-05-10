@@ -17,24 +17,8 @@ void GetMap() {
 }
 
 void DrawTile(Tile tile) {
-	Vector2 vectors[4]{
-		Vector2(0, 0),
-		Vector2(1, 0),
-		Vector2(1, 1),
-		Vector2(0, 1)
-	};
-
-	glBegin(GL_QUADS);
-	glColor3f(255, 0, 0);
-	for (int x = 0; x < 4; x++) {
-		vectors[x].x *= tile.width;
-		vectors[x].y *= tile.height;
-		vectors[x] += Vector2(tile.position.x, tile.position.y);
-		vectors[x] -= Vector2(SCREENWIDTH / 2, SCREENHEIGHT / 2);
-
-		glVertex2d(vectors[x].x, vectors[x].y);
-	}
-	glEnd();
+	int color[3] = { 255, 0, 0 };
+	DrawRect(tile.position, tile.width, tile.height, color);
 }
 
 void DrawMap(std::vector<Tile> tileMapParam) {

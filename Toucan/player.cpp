@@ -146,13 +146,14 @@ void UpdateLocalPlayer(int gameTime) {
 	if (localPlayer.onGround == true) { 
 		if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) { 
 			localPlayer.velocityY = -3.5; localPlayer.onGround = false; 
-		} 
+		}
 	}
 
 	localPlayer.position.x += localPlayer.velocityX;
 	localPlayer.position.y += localPlayer.velocityY;
 
-	localPlayer.velocityY += 9.8 * deltaTimeS;
+	localPlayer.onGround = false;
+	localPlayer.velocityY += 9.8 * deltaTimeS; 
 
 	for (auto &tile : tileMap) {
 		if (CheckCollision(tile) == true) CheckCollisionSpecific(tile);
@@ -206,43 +207,10 @@ void CheckCollisionSpecific(Tile tile) {
 }
 
 void DrawPlayer(Player player) {
-	Vector2 vectors[4]{
-		Vector2(0, 0),
-		Vector2(1, 0),
-		Vector2(1, 1),
-		Vector2(0, 1)
-	};
-
-	glBegin(GL_QUADS);
-	glColor3f(0, 255, 0);
-	for (int x = 0; x < 4; x++) {
-		vectors[x].x *= player.width;
-		vectors[x].y *= player.height;
-		vectors[x] += Vector2(player.position.x, player.position.y);
-		vectors[x] -= Vector2(SCREENWIDTH / 2, SCREENHEIGHT / 2);
-
-		glVertex2d(vectors[x].x, vectors[x].y);
-	}
-	glEnd();
+	DrawRect(player.position, player.width, player.height);
 }
 
 void DrawPlayer(LocalPlayer player) {
-	Vector2 vectors[4]{
-		Vector2(0, 0),
-		Vector2(1, 0),
-		Vector2(1, 1),
-		Vector2(0, 1)
-	};
-
-	glBegin(GL_QUADS);
-	glColor3f(0, 255, 0);
-	for (int x = 0; x < 4; x++) {
-		vectors[x].x *= player.width;
-		vectors[x].y *= player.height;
-		vectors[x] += Vector2(player.position.x, player.position.y);
-		vectors[x] -= Vector2(SCREENWIDTH / 2, SCREENHEIGHT / 2);
-
-		glVertex2d(vectors[x].x, vectors[x].y);
-	}
-	glEnd();
+	GLint texture = LoadTexture("player.bmp");
+	DrawRect(texture, player.position, player.width, player.height);
 }

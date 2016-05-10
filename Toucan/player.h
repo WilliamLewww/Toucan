@@ -5,6 +5,7 @@
 #include "net.h"
 #include "main.h"
 #include "input.h"
+#include "spritebatch.h"
 
 struct LocalPlayer {
 	Vector2 position;

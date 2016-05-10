@@ -69,8 +69,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>G:\Projects\Libraries\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\Projects\Libraries\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>G:\Projects\Libraries\Simple OpenGL Image Library\src;G:\Projects\Libraries\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
+    <LibraryPath>G:\Projects\Libraries\Simple OpenGL Image Library\lib;G:\Projects\Libraries\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -81,7 +81,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SOIL.lib;SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,6 +124,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="spritebatch.cpp" />
     <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +134,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="net.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="spritebatch.h" />
     <ClInclude Include="vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
