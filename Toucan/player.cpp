@@ -138,7 +138,7 @@ void UpdateLocalPlayer(int gameTime) {
 	Vector2 originalPosition = localPlayer.position;
 	localPlayer.velocityX = 0;
 
-	if (std::find(keyList.begin(), keyList.end(), SDLK_x) != keyList.end()) { localPlayer.speed = 125; }
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LCTRL) != keyList.end()) { localPlayer.speed = 125; }
 	else { localPlayer.speed = 100; }
 	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) == keyList.end()) localPlayer.velocityX =  -localPlayer.speed * deltaTimeS;
 	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_LEFT) == keyList.end()) localPlayer.velocityX = localPlayer.speed * deltaTimeS;
