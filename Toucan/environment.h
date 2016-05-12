@@ -8,6 +8,7 @@
 struct Tile {
 	Vector2 position;
 	int width = 20, height = 20;
+	int tileID = -1;
 
 	inline Vector2 midpoint() { return Vector2(position.x + (position.x / 2), position.y + (position.y / 2)); }
 

@@ -11,7 +11,7 @@ void GetMap() {
 		mapLine = ReceiveInitialMessage().c_str();
 
 		for (int x = 0; x < MAPSIZEX; x++) {
-			if (mapLine.at(x) == '1') { tempTile.position = Vector2(x * tempTile.width, y * tempTile.height); tileMap.push_back(tempTile); }
+			if (mapLine.at(x) == '1') { tempTile.position = Vector2(x * tempTile.width, y * tempTile.height); tileMap.push_back(tempTile); tempTile.tileID = 1; }
 		}
 	}
 }

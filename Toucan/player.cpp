@@ -132,6 +132,7 @@ jump:
 	for (std::size_t x = 0; x < idList.size(); x++) playerList[x].uniqueID = idList[x];
 }
 
+bool jumpPress = false;
 void UpdateLocalPlayer(int gameTime) {
 	float deltaTimeS = (float)(gameTime) / 1000;
 
@@ -144,9 +145,16 @@ void UpdateLocalPlayer(int gameTime) {
 	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_LEFT) == keyList.end()) localPlayer.velocityX = localPlayer.speed * deltaTimeS;
 
 	if (localPlayer.onGround == true) { 
-		if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) { 
-			localPlayer.velocityY = -3.5; localPlayer.onGround = false; 
+		if (jumpPress == false) {
+			if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) {
+				localPlayer.velocityY = -3.5; localPlayer.onGround = false; jumpPress = true;
+			}
 		}
+	}
+
+	if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) == keyList.end()) {
+		if (localPlayer.velocityY < 0) localPlayer.velocityY += 9.8 * deltaTimeS;
+		if (localPlayer.onGround == true) jumpPress = false;
 	}
 
 	localPlayer.position.x += localPlayer.velocityX;
@@ -156,7 +164,9 @@ void UpdateLocalPlayer(int gameTime) {
 	localPlayer.velocityY += 9.8 * deltaTimeS; 
 
 	for (auto &tile : tileMap) {
-		if (CheckCollision(tile) == true) CheckCollisionSpecific(tile);
+		if (tile.tileID == 1) {
+			if (CheckCollision(tile) == true) CheckCollisionSpecific(tile);
+		}
 	}
 
 	if (originalPosition != localPlayer.position) {
