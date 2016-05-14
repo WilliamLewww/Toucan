@@ -18,8 +18,17 @@ struct Tile {
 	inline double right() { return position.x + width; }
 };
 
+struct PushTile {
+	Tile tile;
+
+	inline int GetDirection() { };
+};
+
 const int MAPSIZEX = 40, MAPSIZEY = 30;
 extern std::vector<Tile> tileMap;
+extern std::vector<PushTile> pushTileMap;
 
 void GetMap();
 void DrawMap(std::vector<Tile> tileMapParam);
+
+void GetAdjacentPushTile(PushTile &pushTile);
