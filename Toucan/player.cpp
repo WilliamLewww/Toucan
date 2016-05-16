@@ -157,6 +157,17 @@ void UpdateLocalPlayer(int gameTime) {
 		if (localPlayer.onGround == true) jumpPress = false;
 	}
 
+	for (auto &tile : pushTileMap) {
+		if (CheckCollision(tile.tile) == true) {
+			//std::cout << tile.GetDirection(pushTileMap) << std::endl;
+			//0=up 1=down 2=right 3=left
+			if (tile.GetDirection(pushTileMap) == 0) localPlayer.velocityY = tile.force * deltaTimeS;
+			if (tile.GetDirection(pushTileMap) == 1) localPlayer.velocityY = -tile.force * deltaTimeS;
+			if (tile.GetDirection(pushTileMap) == 2) localPlayer.velocityX = tile.force * deltaTimeS;
+			if (tile.GetDirection(pushTileMap) == 3) localPlayer.velocityX = -tile.force * deltaTimeS;
+		}
+	}
+
 	localPlayer.position.x += localPlayer.velocityX;
 	localPlayer.position.y += localPlayer.velocityY;
 

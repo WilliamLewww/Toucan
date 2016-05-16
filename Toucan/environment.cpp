@@ -13,8 +13,9 @@ void GetMap() {
 		mapLine = ReceiveInitialMessage().c_str();
 
 		for (int x = 0; x < MAPSIZEX; x++) {
-			if (mapLine.at(x) == '1') { tempTile.position = Vector2(x * tempTile.width, y * tempTile.height); tileMap.push_back(tempTile); tempTile.tileID = 1; }
-			if (mapLine.at(x) == '2') { tempPushTile.tile.position = Vector2(x * tempPushTile.tile.width, y * tempPushTile.tile.height); pushTileMap.push_back(tempPushTile); tempPushTile.tile.tileID = 2; }
+			if (mapLine.at(x) == '1') { tempTile.position = Vector2(x * tempTile.width, y * tempTile.height); tempTile.tileID = 1; tileMap.push_back(tempTile); }
+			if (mapLine.at(x) == '2') { tempPushTile.tile.position = Vector2(x * tempPushTile.tile.width, y * tempPushTile.tile.height); tempPushTile.tile.tileID = 2; tempPushTile.end = false; pushTileMap.push_back(tempPushTile); }
+			if (mapLine.at(x) == '3') { tempPushTile.tile.position = Vector2(x * tempPushTile.tile.width, y * tempPushTile.tile.height); tempPushTile.tile.tileID = 2; tempPushTile.end = true; pushTileMap.push_back(tempPushTile); }
 		}
 	}
 }
@@ -25,7 +26,7 @@ void DrawTile(Tile tile) {
 }
 
 void DrawMap(std::vector<Tile> tileMapParam) {
-	for (auto &tile : tileMap) {
+	for (auto &tile : tileMapParam) {
 		DrawTile(tile);
 	}
 }
