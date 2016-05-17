@@ -26,7 +26,6 @@ struct PushTile {
 
 	//0=up 1=down 2=right 3=left
 	inline int GetDirection(std::vector<PushTile> tileMap) { 
-		//std::cout << tile.position << std::endl;
 		for (auto &otherTile : tileMap) {
 			//othertile = left
 			if (otherTile.tile.position.x == (tile.position.x - tile.width) && (otherTile.tile.position.y == tile.position.y)) {
