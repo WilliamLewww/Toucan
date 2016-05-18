@@ -4,7 +4,7 @@ std::vector<Player> playerList;
 LocalPlayer localPlayer;
 
 bool CheckCollision(Tile tile);
-void CheckCollisionSpecific(Tile tile);
+void HandleCollision(Tile tile);
 
 void InitializePlayer() {
 	std::string tempPosition, positionX, positionY;
@@ -135,8 +135,20 @@ jump:
 bool jumpPress = false;
 void UpdateLocalPlayer(int gameTime) {
 	float deltaTimeS = (float)(gameTime) / 1000;
-
 	Vector2 originalPosition = localPlayer.position;
+
+	for (auto &tile : pushTileMap) {
+		if (CheckCollision(tile.tile) == true) {
+			//0=up 1=down 2=right 3=left
+			if (tile.GetDirection(pushTileMap) == 0) localPlayer.velocityY = tile.force * deltaTimeS;
+			if (tile.GetDirection(pushTileMap) == 1) localPlayer.velocityY = -tile.force * deltaTimeS;
+			if (tile.GetDirection(pushTileMap) == 2) localPlayer.velocityX = tile.force * deltaTimeS;
+			if (tile.GetDirection(pushTileMap) == 3) localPlayer.velocityX = -tile.force * deltaTimeS;
+		}
+	}
+
+	localPlayer.position.x += localPlayer.velocityX;
+	localPlayer.position.y += localPlayer.velocityY;
 	localPlayer.velocityX = 0;
 
 	if (std::find(keyList.begin(), keyList.end(), SDLK_LCTRL) != keyList.end()) { localPlayer.speed = 125; }
@@ -157,25 +169,12 @@ void UpdateLocalPlayer(int gameTime) {
 		if (localPlayer.onGround == true) jumpPress = false;
 	}
 
-	for (auto &tile : pushTileMap) {
-		if (CheckCollision(tile.tile) == true) {
-			//0=up 1=down 2=right 3=left
-			if (tile.GetDirection(pushTileMap) == 0) localPlayer.velocityY = tile.force * deltaTimeS;
-			if (tile.GetDirection(pushTileMap) == 1) localPlayer.velocityY = -tile.force * deltaTimeS;
-			if (tile.GetDirection(pushTileMap) == 2) localPlayer.velocityX = tile.force * deltaTimeS;
-			if (tile.GetDirection(pushTileMap) == 3) localPlayer.velocityX = -tile.force * deltaTimeS;
-		}
-	}
-
-	localPlayer.position.x += localPlayer.velocityX;
-	localPlayer.position.y += localPlayer.velocityY;
-
 	localPlayer.onGround = false;
 	localPlayer.velocityY += 9.8 * deltaTimeS; 
 
 	for (auto &tile : tileMap) {
 		if (tile.tileID == 1) {
-			if (CheckCollision(tile) == true) CheckCollisionSpecific(tile);
+			if (CheckCollision(tile) == true) HandleCollision(tile);
 		}
 	}
 
@@ -193,37 +192,39 @@ void UpdateLocalPlayer(int gameTime) {
 //player.Bottom >= rectangle.Top
 
 bool CheckCollision(Tile tile) {
-	if (localPlayer.left() <= tile.right() &&
-		localPlayer.right() >= tile.left() &&
-		localPlayer.top() <= tile.bottom() &&
-		localPlayer.bottom() >= tile.top()) {
+	if (localPlayer.left() < tile.right() &&
+		localPlayer.right() > tile.left() &&
+		localPlayer.top() < tile.bottom() &&
+		localPlayer.bottom() > tile.top()) {
 			return true;
 	}
 
 	return false;
 }
 
-void CheckCollisionSpecific(Tile tile) {
-	if (localPlayer.bottom() > tile.top() && localPlayer.bottom() < tile.top() + 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
-		localPlayer.onGround = true;
-		localPlayer.velocityY = 0;
-		localPlayer.position.y = tile.top() - tile.height;
+void HandleCollision(Tile tile) {
+	double overlapX, overlapY;
+	if (localPlayer.midpoint().x > tile.midpoint().x) overlapX = tile.right() - localPlayer.left();
+	else overlapX = -(localPlayer.right() - tile.left());
+	if (localPlayer.midpoint().y > tile.midpoint().y) overlapY = tile.bottom() - localPlayer.top();
+	else overlapY = -(localPlayer.bottom() - tile.top());
+
+	if (abs(overlapY) < abs(overlapX)) { 
+		if (overlapY < 0) {
+			if (localPlayer.velocityY > 0) {
+				localPlayer.onGround = true;
+				localPlayer.position.y += overlapY; localPlayer.velocityY = 0;
+			}
+		}
+		else {
+			if (localPlayer.velocityY < 0) { localPlayer.position.y += overlapY; localPlayer.velocityY = 0; }
+		}
+	}
+	else {
+		localPlayer.position.x += overlapX; localPlayer.velocityX = 0;
 	}
 
-	if (localPlayer.top() < tile.bottom() && localPlayer.top() > tile.top() - 16 && localPlayer.left() < tile.right() - 3 && localPlayer.right() > tile.left() + 3) {
-		if (localPlayer.velocityY < 0) localPlayer.velocityY = 0;
-		localPlayer.position.y = tile.bottom();
-	}
-
-	if (localPlayer.left() < tile.right() && localPlayer.left() > tile.right() - 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
-		if (localPlayer.velocityX < 0) localPlayer.velocityX = 0;
-		localPlayer.position.x = tile.left() + tile.width;
-	}
-
-	if (localPlayer.right() > tile.left() && localPlayer.right() < tile.left() + 5 && localPlayer.bottom() > tile.top() + 5 && localPlayer.top() < tile.bottom() - 5) {
-		if (localPlayer.velocityX > 0) localPlayer.velocityX = 0;
-		localPlayer.position.x = tile.left() - localPlayer.width;
-	}
+	
 }
 
 void DrawPlayer(Player player) {
