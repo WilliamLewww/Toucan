@@ -12,6 +12,10 @@ struct Tile {
 
 	inline Vector2 midpoint() { return Vector2(position.x + (position.x / 2), position.y + (position.y / 2)); }
 
+	int operator==(const Tile& tile)const {
+		return (position.x == tile.position.x) && (position.y == tile.position.y);
+	}
+
 	inline double top() { return position.y; }
 	inline double bottom() { return position.y + height; }
 	inline double left() { return position.x; }
@@ -20,7 +24,7 @@ struct Tile {
 
 struct PushTile {
 	Tile tile;
-	double force = 130;
+	double force = 250;
 	int initialDirection = -1;
 	bool end = false;
 

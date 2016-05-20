@@ -5,6 +5,7 @@ LocalPlayer localPlayer;
 
 bool CheckCollision(Tile tile);
 void HandleCollision(Tile tile);
+void FloatingMovement(float deltaTimeS);
 
 void InitializePlayer() {
 	std::string tempPosition, positionX, positionY;
@@ -132,7 +133,9 @@ jump:
 	for (std::size_t x = 0; x < idList.size(); x++) playerList[x].uniqueID = idList[x];
 }
 
+std::vector<Tile> groundTileList;
 bool jumpPress = false;
+bool floatingMovement = false;
 void UpdateLocalPlayer(int gameTime) {
 	float deltaTimeS = (float)(gameTime) / 1000;
 	Vector2 originalPosition = localPlayer.position;
@@ -147,11 +150,15 @@ void UpdateLocalPlayer(int gameTime) {
 		}
 	}
 
+	if (floatingMovement) FloatingMovement(deltaTimeS);
+
 	localPlayer.position.x += localPlayer.velocityX;
 	localPlayer.position.y += localPlayer.velocityY;
 	localPlayer.velocityX = 0;
 
-	if (std::find(keyList.begin(), keyList.end(), SDLK_LCTRL) != keyList.end()) { localPlayer.speed = 125; }
+	if (std::find(keyList.begin(), keyList.end(), SDLK_f) != keyList.end()) floatingMovement = !floatingMovement;
+
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LCTRL) != keyList.end()) { localPlayer.speed = 150; }
 	else { localPlayer.speed = 100; }
 	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) == keyList.end()) localPlayer.velocityX =  -localPlayer.speed * deltaTimeS;
 	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_LEFT) == keyList.end()) localPlayer.velocityX = localPlayer.speed * deltaTimeS;
@@ -159,18 +166,20 @@ void UpdateLocalPlayer(int gameTime) {
 	if (localPlayer.onGround == true) { 
 		if (jumpPress == false) {
 			if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) {
-				localPlayer.velocityY = -3.5; localPlayer.onGround = false; jumpPress = true;
+				localPlayer.velocityY = -4.0; localPlayer.onGround = false; jumpPress = true;
 			}
 		}
 	}
+	else {
+		localPlayer.velocityY += 9.8 * deltaTimeS;
+	}
 
 	if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) == keyList.end()) {
-		if (localPlayer.velocityY < 0) localPlayer.velocityY += 9.8 * deltaTimeS;
+		if (localPlayer.velocityY < 0 && localPlayer.onGround == false) localPlayer.velocityY += 9.8 * deltaTimeS;
 		if (localPlayer.onGround == true) jumpPress = false;
 	}
 
-	localPlayer.onGround = false;
-	localPlayer.velocityY += 9.8 * deltaTimeS; 
+	//std::cout << localPlayer.onGround << std::endl;
 
 	for (auto &tile : tileMap) {
 		if (tile.tileID == 1) {
@@ -186,16 +195,25 @@ void UpdateLocalPlayer(int gameTime) {
 	}
 }
 
+void FloatingMovement(float deltaTimeS) {
+	localPlayer.velocityX = 0;
+	localPlayer.velocityY = 0;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_LEFT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) == keyList.end()) localPlayer.velocityX = -localPlayer.speed * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_RIGHT) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_LEFT) == keyList.end()) localPlayer.velocityX = localPlayer.speed * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_UP) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_DOWN) == keyList.end()) localPlayer.velocityY = -localPlayer.speed * deltaTimeS;
+	if (std::find(keyList.begin(), keyList.end(), SDLK_DOWN) != keyList.end() && std::find(keyList.begin(), keyList.end(), SDLK_UP) == keyList.end()) localPlayer.velocityY = localPlayer.speed * deltaTimeS;
+}
+
 //player.Left <= rectangle.Right &&
 //player.Right >= rectangle.Left &&
 //player.Top <= rectangle.Bottom &&
 //player.Bottom >= rectangle.Top
 
 bool CheckCollision(Tile tile) {
-	if (localPlayer.left() < tile.right() &&
-		localPlayer.right() > tile.left() &&
-		localPlayer.top() < tile.bottom() &&
-		localPlayer.bottom() > tile.top()) {
+	if (localPlayer.left() <= tile.right() &&
+		localPlayer.right() >= tile.left() &&
+		localPlayer.top() <= tile.bottom() &&
+		localPlayer.bottom() >= tile.top()) {
 			return true;
 	}
 
@@ -209,11 +227,16 @@ void HandleCollision(Tile tile) {
 	if (localPlayer.midpoint().y > tile.midpoint().y) overlapY = tile.bottom() - localPlayer.top();
 	else overlapY = -(localPlayer.bottom() - tile.top());
 
-	if (abs(overlapY) < abs(overlapX)) { 
+	std::cout << groundTileList.size() << std::endl;
+
+	//std::cout << overlapX << "," << overlapY << std::endl;
+
+	if (abs(overlapY) < abs(overlapX)) {
 		if (overlapY < 0) {
 			if (localPlayer.velocityY > 0) {
 				localPlayer.onGround = true;
 				localPlayer.position.y += overlapY; localPlayer.velocityY = 0;
+				if (std::find(groundTileList.begin(), groundTileList.end(), tile) == groundTileList.end()) groundTileList.push_back(tile);
 			}
 		}
 		else {
@@ -223,8 +246,6 @@ void HandleCollision(Tile tile) {
 	else {
 		localPlayer.position.x += overlapX; localPlayer.velocityX = 0;
 	}
-
-	
 }
 
 void DrawPlayer(Player player) {
