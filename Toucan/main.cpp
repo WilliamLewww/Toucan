@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
 	glOrtho(-SCREENWIDTH / 2, SCREENWIDTH / 2, SCREENHEIGHT / 2, -SCREENHEIGHT / 2, 0, 1);
 
 	std::thread listener(ReceiveMessage);
+	std::thread messageTimer(SendMessageTimer);
 
 	joiner.LoadContent();
 
@@ -58,6 +59,7 @@ int main(int argc, char *argv[]) {
 		deltaTime = frameEnd - frameStart;
 	}
 
+	messageTimer.detach();
 	listener.detach();
 	CleanUp();
 	return 0;

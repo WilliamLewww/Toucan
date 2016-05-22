@@ -17,10 +17,15 @@ static char buf[BUFLEN];
 static bool messageReceived;
 
 void SendMessage(char message[]);
+void SendMessageWithTimer(char message[]);
+
 std::string ReceiveInitialMessage();
 void Initialize();
 void CleanUp();
 void SetServerIP(char IP[]);
+
+void SendMessageTimer();
+extern bool resetTimer;
 
 void ReceiveMessage();
 void ResetAdvert();

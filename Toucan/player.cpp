@@ -204,7 +204,7 @@ void UpdateLocalPlayer(int gameTime) {
 		char positionChar[BUFLEN];
 		std::string positionX(std::to_string(localPlayer.position.x)), positionY(std::to_string(localPlayer.position.y).c_str());
 		strcpy(positionChar, ("position>" + positionX.substr(0, positionX.find('.') + 3) + "," + positionY.substr(0, positionY.find('.') + 3)).c_str());
-		SendMessage(positionChar);
+		SendMessageWithTimer(positionChar);
 	}
 }
 

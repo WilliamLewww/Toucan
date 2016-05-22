@@ -1,5 +1,7 @@
 #include "net.h"
 
+bool resetTimer = false;
+
 std::string newestReply;
 std::string newestAdvert;
 
@@ -21,6 +23,29 @@ void CleanUp() {
 
 void SendMessage(char message[]) {
 	sendto(s, message, strlen(message), 0, (struct sockaddr *) &server, slen);
+}
+
+void SendMessageWithTimer(char message[]) {
+	if (resetTimer == false) {
+		sendto(s, message, strlen(message), 0, (struct sockaddr *) &server, slen);
+		resetTimer = true;
+	}
+}
+
+void SendMessageTimer() {
+	while (true) {
+		if (resetTimer == true) {
+			std::clock_t initial;
+			double duration = 0;
+			initial = std::clock();
+
+			while (duration < .05) {
+				duration = (std::clock() - initial) / (double)CLOCKS_PER_SEC;
+			}
+
+			resetTimer = false;
+		}
+	}
 }
 
 void ReceiveMessage() {
