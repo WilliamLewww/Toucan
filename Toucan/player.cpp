@@ -5,6 +5,7 @@ LocalPlayer localPlayer;
 
 bool CheckCollision(Tile tile);
 void HandleCollision(Tile tile);
+bool CheckCollisionBottom(Tile tile);
 void FloatingMovement(float deltaTimeS);
 
 void InitializePlayer() {
@@ -166,7 +167,7 @@ void UpdateLocalPlayer(int gameTime) {
 	if (localPlayer.onGround == true) { 
 		if (jumpPress == false) {
 			if (std::find(keyList.begin(), keyList.end(), SDLK_SPACE) != keyList.end()) {
-				localPlayer.velocityY = -4.0; localPlayer.onGround = false; jumpPress = true;
+				localPlayer.velocityY = -3.5; localPlayer.onGround = false; jumpPress = true;
 			}
 		}
 	}
@@ -179,13 +180,25 @@ void UpdateLocalPlayer(int gameTime) {
 		if (localPlayer.onGround == true) jumpPress = false;
 	}
 
-	//std::cout << localPlayer.onGround << std::endl;
-
 	for (auto &tile : tileMap) {
 		if (tile.tileID == 1) {
 			if (CheckCollision(tile) == true) HandleCollision(tile);
 		}
 	}
+
+	std::vector<Tile> tempGroundTileList;
+	for (auto &tile : groundTileList) {
+		if (CheckCollision(tile) == false) {
+			tempGroundTileList.push_back(tile);
+		}
+	}
+
+	for (auto &tile : tempGroundTileList) {
+		groundTileList.erase(std::remove(groundTileList.begin(), groundTileList.end(), tile), groundTileList.end());
+	}
+	tempGroundTileList.clear();
+
+	if (groundTileList.size() == 0) localPlayer.onGround = false;
 
 	if (originalPosition != localPlayer.position) {
 		char positionChar[BUFLEN];
@@ -220,6 +233,12 @@ bool CheckCollision(Tile tile) {
 	return false;
 }
 
+//player.top <= tile.bottom && player.top >= tile.bottom - 5 && player.left <= tile.right - 5 && player.right >= tile.left + 5:
+bool CheckCollisionBottom(Tile tile) {
+	if (localPlayer.top() <= tile.bottom() && localPlayer.top() >= tile.bottom() - 5 && localPlayer.left() <= tile.right() - 3 && localPlayer.right() >= tile.left() + 3) return true;
+	return false;
+}
+
 void HandleCollision(Tile tile) {
 	double overlapX, overlapY;
 	if (localPlayer.midpoint().x > tile.midpoint().x) overlapX = tile.right() - localPlayer.left();
@@ -227,24 +246,24 @@ void HandleCollision(Tile tile) {
 	if (localPlayer.midpoint().y > tile.midpoint().y) overlapY = tile.bottom() - localPlayer.top();
 	else overlapY = -(localPlayer.bottom() - tile.top());
 
-	std::cout << groundTileList.size() << std::endl;
-
-	//std::cout << overlapX << "," << overlapY << std::endl;
-
-	if (abs(overlapY) < abs(overlapX)) {
-		if (overlapY < 0) {
-			if (localPlayer.velocityY > 0) {
-				localPlayer.onGround = true;
-				localPlayer.position.y += overlapY; localPlayer.velocityY = 0;
-				if (std::find(groundTileList.begin(), groundTileList.end(), tile) == groundTileList.end()) groundTileList.push_back(tile);
+	if (overlapX != 0 && overlapY != 0) {
+		if (abs(overlapY) < abs(overlapX)) {
+			if (overlapY < 0) {
+				if (localPlayer.velocityY > 0) {
+					localPlayer.onGround = true;
+					localPlayer.position.y += overlapY; localPlayer.velocityY = 0;
+					if (std::find(groundTileList.begin(), groundTileList.end(), tile) == groundTileList.end()) groundTileList.push_back(tile);
+				}
+			}
+			else {
+				if (localPlayer.velocityY < 0) {
+					if (CheckCollisionBottom(tile)) { localPlayer.position.y += overlapY; localPlayer.velocityY = 0; }
+				}
 			}
 		}
 		else {
-			if (localPlayer.velocityY < 0) { localPlayer.position.y += overlapY; localPlayer.velocityY = 0; }
+			localPlayer.position.x += overlapX; localPlayer.velocityX = 0;
 		}
-	}
-	else {
-		localPlayer.position.x += overlapX; localPlayer.velocityX = 0;
 	}
 }
 
